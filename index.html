@@ -928,20 +928,20 @@
   }
 
   // Fonction pour écrire des données
-  function writeSheet(data) {
-    gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: SPREADSHEET_ID,
-      range: "donnees!A1",
-      valueInputOption: "RAW",
-      resource: { values: data }
-    }).then(function(response) {
-      console.log("Données envoyées avec succès !");
-      alert("Données envoyées avec succès !");
-    }, function(error) {
-      console.error("Erreur :", error.result.error.message);
-      alert("Erreur : " + error.result.error.message);
-    });
-  }
+ function writeSheet(data) {
+  gapi.client.sheets.spreadsheets.values.update({
+    spreadsheetId: SPREADSHEET_ID,
+    range: "donnees!A1", // Écrit à partir de la cellule A1 dans l'onglet "donnees"
+    valueInputOption: "RAW",
+    resource: { values: data }
+  }).then(function(response) {
+    console.log("Données envoyées avec succès !");
+    alert("Données envoyées avec succès !");
+  }, function(error) {
+    console.error("Erreur :", error.result.error.message);
+    alert("Erreur : " + error.result.error.message);
+  });
+}
 
   // Affiche les données dans la page
   function displayData(data) {
