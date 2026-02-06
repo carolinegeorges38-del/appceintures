@@ -80,6 +80,8 @@
         .badge-success { background: #dcfce7; color: #166534; }
         .badge-warning { background: #fef3c7; color: #92400e; }
     </style>
+<script src="https://apis.google.com/js/api.js"></script>
+
 </head>
 <body>
     <div id="root"></div>
@@ -883,5 +885,88 @@
 
         ReactDOM.render(<CeinturesApp />, document.getElementById('root'));
     </script>
+<!-- Boutons pour tester la synchronisation -->
+<button onclick="readSheet()">Lire les données</button>
+<button onclick="writeSheet([['Test', '1', '2', '3']])">Écrire des données</button>
+<div id="data-container"></div>
+
+<!-- Code JavaScript pour la synchronisation -->
+<script>
+  // Remplace par ta clé API et l'ID de ton Google Sheet
+  const API_KEY = "AIzaSyAxEz8V8Y5Jw4EtCifiUWpCJDYt5DVqIDs";
+  const SPREADSHEET_ID = "1_rDAAO8ov8pzV6O8ET2Auz95C7Q2Vzu3lPsWaeB7oEA";
+  const RANGE = "donnees!A1:Z1000"; // Onglet "donnees"
+
+  // Charge l'API Google
+  function loadGoogleAPI() {
+    gapi.load("client", initClient);
+  }
+
+  // Initialise le client API
+  function initClient() {
+    gapi.client.init({
+      apiKey: API_KEY,
+      discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+    }).then(function() {
+      console.log("API Google Sheets chargée avec succès !");
+    });
+  }
+
+  // Fonction pour lire les données
+  function readSheet() {
+    gapi.client.sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: RANGE,
+    }).then(function(response) {
+      const data = response.result.values;
+      console.log("Données récupérées :", data);
+      displayData(data);
+    }, function(error) {
+      console.error("Erreur :", error.result.error.message);
+      alert("Erreur : " + error.result.error.message);
+    });
+  }
+
+  // Fonction pour écrire des données
+  function writeSheet(data) {
+    gapi.client.sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: "donnees!A1",
+      valueInputOption: "RAW",
+      resource: { values: data }
+    }).then(function(response) {
+      console.log("Données envoyées avec succès !");
+      alert("Données envoyées avec succès !");
+    }, function(error) {
+      console.error("Erreur :", error.result.error.message);
+      alert("Erreur : " + error.result.error.message);
+    });
+  }
+
+  // Affiche les données dans la page
+  function displayData(data) {
+    const container = document.getElementById("data-container");
+    if (!container) return;
+
+    let html = "<h2>Données récupérées :</h2><table border='1'>";
+    if (data && data.length > 0) {
+      data.forEach(row => {
+        html += "<tr>";
+        row.forEach(cell => {
+          html += `<td>${cell}</td>`;
+        });
+        html += "</tr>";
+      });
+    } else {
+      html += "<tr><td>Aucune donnée disponible.</td></tr>";
+    }
+    html += "</table>";
+    container.innerHTML = html;
+  }
+
+  // Charge l'API au démarrage
+  loadGoogleAPI();
+</script>
+
 </body>
 </html>
