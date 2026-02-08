@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -80,24 +81,35 @@
         .badge-success { background: #dcfce7; color: #166534; }
         .badge-warning { background: #fef3c7; color: #92400e; }
     </style>
-<script src="https://apis.google.com/js/api.js"></script>
-
 </head>
 <body>
     <div id="root"></div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- React -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Configuration Google Sheets
-        const GOOGLE_SHEETS_CONFIG = {
-            enabled: false, // À activer après configuration
-            apiKey: '', // Votre clé API Google
-            spreadsheetId: '', // ID de votre Google Sheet
-            range: 'Données!A:Z'
+        // 🔥 CONFIGURATION FIREBASE
+        const firebaseConfig = {
+          apiKey: "AIzaSyA1Vs3628dcDJBu1unYb59GMFJF5tuD8w0",
+          authDomain: "ceinturescm1.firebaseapp.com",
+          projectId: "ceinturescm1",
+          storageBucket: "ceinturescm1.firebasestorage.app",
+          messagingSenderId: "450198698949",
+          appId: "1:450198698949:web:2ef5a899b9090f286169ac"
         };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
         const SUBJECTS = [
           { id: 'calcul', name: 'Calcul posé', color: '#9333ea' },
@@ -131,31 +143,6 @@
           { name: 'Félix', gender: 'M' }
         ];
 
-        // Stockage local ou Google Sheets
-        const StorageManager = {
-            async get(key) {
-                if (GOOGLE_SHEETS_CONFIG.enabled) {
-                    return await this.getFromSheets(key);
-                }
-                const value = localStorage.getItem(key);
-                return value ? { key, value } : null;
-            },
-            async set(key, value) {
-                if (GOOGLE_SHEETS_CONFIG.enabled) {
-                    await this.saveToSheets(key, value);
-                }
-                localStorage.setItem(key, value);
-                return { key, value };
-            },
-            async getFromSheets(key) {
-                // TODO: Implémenter la lecture depuis Google Sheets
-                return null;
-            },
-            async saveToSheets(key, value) {
-                // TODO: Implémenter la sauvegarde vers Google Sheets
-            }
-        };
-
         const Card = ({ children, className = '', style = {}, onClick }) => (
             <div className={'card ' + className} style={style} onClick={onClick}>{children}</div>
         );
@@ -179,75 +166,76 @@
           const [view, setView] = useState('login');
           const [currentStudent, setCurrentStudent] = useState(null);
           const [studentData, setStudentData] = useState({});
-          const [students, setStudents] = useState(DEMO_STUDENTS);
+          const [students, setStudents] = useState([]);
+          const [loading, setLoading] = useState(true);
 
           useEffect(() => {
-            const loadData = async () => {
-              try {
-                const studentsResult = await StorageManager.get('ceintures-students');
-                let loadedStudents = DEMO_STUDENTS;
-                if (studentsResult && studentsResult.value) {
-                  loadedStudents = JSON.parse(studentsResult.value);
-                  setStudents(loadedStudents);
-                }
-                
-                const dataResult = await StorageManager.get('ceintures-data');
-                if (dataResult && dataResult.value) {
-                  setStudentData(JSON.parse(dataResult.value));
-                } else {
-                  const initialData = {};
-                  loadedStudents.forEach(student => {
-                    initialData[student.name] = {};
-                    SUBJECTS.forEach(subject => {
-                      initialData[student.name][subject.id] = {
-                        currentBelt: 0,
-                        trainings: [],
-                        history: [] // Historique des ceintures validées
-                      };
-                    });
-                  });
-                  setStudentData(initialData);
-                  await StorageManager.set('ceintures-data', JSON.stringify(initialData));
-                }
-              } catch (error) {
-                console.log('Init', error);
+            // 🔥 Écouter les changements en temps réel depuis Firebase
+            const unsubscribeStudents = db.collection('students').onSnapshot(snapshot => {
+              if (snapshot.empty) {
+                // Initialiser avec les élèves de démo
+                DEMO_STUDENTS.forEach(student => {
+                  db.collection('students').add(student);
+                });
+              } else {
+                const loadedStudents = snapshot.docs.map(doc => ({
+                  id: doc.id,
+                  ...doc.data()
+                }));
+                setStudents(loadedStudents);
               }
+            });
+
+            const unsubscribeData = db.collection('studentData').onSnapshot(snapshot => {
+              const data = {};
+              snapshot.docs.forEach(doc => {
+                data[doc.id] = doc.data();
+              });
+              
+              if (Object.keys(data).length === 0) {
+                // Initialiser les données pour les élèves de démo
+                DEMO_STUDENTS.forEach(student => {
+                  const initialData = {};
+                  SUBJECTS.forEach(subject => {
+                    initialData[subject.id] = {
+                      currentBelt: 0,
+                      trainings: [],
+                      history: []
+                    };
+                  });
+                  db.collection('studentData').doc(student.name).set(initialData);
+                });
+              } else {
+                setStudentData(data);
+                setLoading(false);
+              }
+            });
+
+            return () => {
+              unsubscribeStudents();
+              unsubscribeData();
             };
-            loadData();
           }, []);
 
-          const saveData = async (data) => {
-            setStudentData(data);
-            try {
-              await StorageManager.set('ceintures-data', JSON.stringify(data));
-            } catch (e) {}
-          };
-
-          const saveStudents = async (newStudents) => {
-            setStudents(newStudents);
-            try {
-              await StorageManager.set('ceintures-students', JSON.stringify(newStudents));
-            } catch (e) {}
-          };
-
           const addStudent = async (name, gender) => {
-            const newStudents = [...students, { name, gender }];
-            await saveStudents(newStudents);
+            // Ajouter l'élève
+            await db.collection('students').add({ name, gender });
             
-            const newData = { ...studentData };
-            newData[name] = {};
+            // Initialiser ses données
+            const initialData = {};
             SUBJECTS.forEach(subject => {
-              newData[name][subject.id] = { currentBelt: 0, trainings: [], history: [] };
+              initialData[subject.id] = { currentBelt: 0, trainings: [], history: [] };
             });
-            await saveData(newData);
+            await db.collection('studentData').doc(name).set(initialData);
           };
 
           const removeStudent = async (name) => {
-            const newStudents = students.filter(s => s.name !== name);
-            await saveStudents(newStudents);
-            const newData = { ...studentData };
-            delete newData[name];
-            await saveData(newData);
+            // Trouver et supprimer l'élève
+            const snapshot = await db.collection('students').where('name', '==', name).get();
+            snapshot.docs.forEach(doc => doc.ref.delete());
+            
+            // Supprimer ses données
+            await db.collection('studentData').doc(name).delete();
           };
 
           const isStudentReady = (trainings) => {
@@ -270,38 +258,80 @@
           };
 
           const addTraining = async (student, subject, errors) => {
-            const newData = { ...studentData };
-            newData[student][subject].trainings.push({ errors, date: Date.now() });
-            await saveData(newData);
+            const currentData = studentData[student] || {};
+            const subjectData = currentData[subject] || { currentBelt: 0, trainings: [], history: [] };
+            
+            const updatedTrainings = [...subjectData.trainings, { errors, date: Date.now() }];
+            
+            await db.collection('studentData').doc(student).set({
+              ...currentData,
+              [subject]: {
+                ...subjectData,
+                trainings: updatedTrainings
+              }
+            });
           };
 
           const validateBelt = async (student, subject) => {
-            const newData = { ...studentData };
-            const currentBeltIndex = newData[student][subject].currentBelt;
-            newData[student][subject].currentBelt += 1;
-            newData[student][subject].trainings = [];
-            // Ajouter à l'historique
-            newData[student][subject].history = newData[student][subject].history || [];
-            newData[student][subject].history.push({
-              beltIndex: currentBeltIndex + 1,
-              beltName: BELTS[currentBeltIndex + 1]?.name || '',
-              date: Date.now()
+            const currentData = studentData[student];
+            const subjectData = currentData[subject];
+            const currentBeltIndex = subjectData.currentBelt;
+            
+            await db.collection('studentData').doc(student).set({
+              ...currentData,
+              [subject]: {
+                ...subjectData,
+                currentBelt: currentBeltIndex + 1,
+                trainings: [],
+                history: [
+                  ...(subjectData.history || []),
+                  {
+                    beltIndex: currentBeltIndex + 1,
+                    beltName: BELTS[currentBeltIndex + 1]?.name || '',
+                    date: Date.now()
+                  }
+                ]
+              }
             });
-            await saveData(newData);
           };
 
           const setBeltLevel = async (student, subject, beltIndex) => {
-            const newData = { ...studentData };
-            newData[student][subject].currentBelt = beltIndex;
-            newData[student][subject].trainings = [];
-            await saveData(newData);
+            const currentData = studentData[student];
+            const subjectData = currentData[subject];
+            
+            await db.collection('studentData').doc(student).set({
+              ...currentData,
+              [subject]: {
+                ...subjectData,
+                currentBelt: beltIndex,
+                trainings: []
+              }
+            });
           };
 
           const rejectTest = async (student, subject) => {
-            const newData = { ...studentData };
-            newData[student][subject].trainings = [];
-            await saveData(newData);
+            const currentData = studentData[student];
+            const subjectData = currentData[subject];
+            
+            await db.collection('studentData').doc(student).set({
+              ...currentData,
+              [subject]: {
+                ...subjectData,
+                trainings: []
+              }
+            });
           };
+
+          if (loading) {
+            return (
+              <div className="min-h-screen bg-gradient p-4 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">⏳</div>
+                  <p className="text-xl text-purple-900">Chargement...</p>
+                </div>
+              </div>
+            );
+          }
 
           if (view === 'login') {
             return (
@@ -341,7 +371,7 @@
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {students.map(student => (
-                      <Card key={student.name} className="cursor-pointer hover:shadow-lg transition-all"
+                      <Card key={student.id} className="cursor-pointer hover:shadow-lg transition-all"
                             onClick={() => setCurrentStudent(student.name)}>
                         <CardContent className="text-center p-6">
                           <div className="text-4xl mb-2">{student.gender === 'F' ? '👧' : '👦'}</div>
@@ -384,6 +414,8 @@
 
         const StudentView = ({ student, data, onBack, onAddTraining, isStudentReady, getProgressForGauge }) => {
           const [selectedSubject, setSelectedSubject] = useState(null);
+
+          if (!data) return null;
 
           if (!selectedSubject) {
             return (
@@ -561,10 +593,10 @@
                                     onValidateBelt, onRejectTest, onSetBeltLevel, onAddStudent, onRemoveStudent }) => {
           const [selectedSubject, setSelectedSubject] = useState(null);
           const [showManagement, setShowManagement] = useState(false);
-          const [showBeltManager, setShowBeltManager] = useState(null); // {student, subject}
+          const [showBeltManager, setShowBeltManager] = useState(null);
           const [newName, setNewName] = useState('');
           const [newGender, setNewGender] = useState('F');
-          const [selectedForValidation, setSelectedForValidation] = useState([]); // Liste des sélectionnés
+          const [selectedForValidation, setSelectedForValidation] = useState([]);
 
           const getReadyStudents = () => {
             const result = [];
@@ -708,7 +740,7 @@
                       <h2 className="text-xl font-bold mb-4">Liste ({students.length})</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                         {students.map(s => (
-                          <Card key={s.name} className="relative">
+                          <Card key={s.id} className="relative">
                             <CardContent className="text-center p-4">
                               <button onClick={() => confirm(`Supprimer ${s.name} ?`) && onRemoveStudent(s.name)}
                                       className="absolute top-2 right-2 text-red-600 text-xl"
@@ -837,7 +869,7 @@
                         </thead>
                         <tbody>
                           {students.map(stu => (
-                            <tr key={stu.name} className="hover:bg-gray-50">
+                            <tr key={stu.id} className="hover:bg-gray-50">
                               <td className="font-semibold">
                                 <span className="text-xl">{stu.gender === 'F' ? '👧' : '👦'}</span> {stu.name}
                               </td>
@@ -885,88 +917,5 @@
 
         ReactDOM.render(<CeinturesApp />, document.getElementById('root'));
     </script>
-<!-- Boutons pour tester la synchronisation -->
-<button onclick="readSheet()">Lire les données</button>
-<button onclick="writeSheet([['Test', '1', '2', '3']])">Écrire des données</button>
-<div id="data-container"></div>
-
-<!-- Code JavaScript pour la synchronisation -->
-<script>
-  // Remplace par ta clé API et l'ID de ton Google Sheet
-  const API_KEY = "AIzaSyAxEz8V8Y5Jw4EtCifiUWpCJDYt5DVqIDs";
-  const SPREADSHEET_ID = "1_rDAAO8ov8pzV6O8ET2Auz95C7Q2Vzu3lPsWaeB7oEA";
-  const RANGE = "donnees!A1:Z1000"; // Onglet "donnees"
-
-  // Charge l'API Google
-  function loadGoogleAPI() {
-    gapi.load("client", initClient);
-  }
-
-  // Initialise le client API
-  function initClient() {
-    gapi.client.init({
-      apiKey: API_KEY,
-      discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-    }).then(function() {
-      console.log("API Google Sheets chargée avec succès !");
-    });
-  }
-
-  // Fonction pour lire les données
-  function readSheet() {
-    gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: RANGE,
-    }).then(function(response) {
-      const data = response.result.values;
-      console.log("Données récupérées :", data);
-      displayData(data);
-    }, function(error) {
-      console.error("Erreur :", error.result.error.message);
-      alert("Erreur : " + error.result.error.message);
-    });
-  }
-
-  // Fonction pour écrire des données
- function writeSheet(data) {
-  gapi.client.sheets.spreadsheets.values.update({
-    spreadsheetId: SPREADSHEET_ID,
-    range: "donnees!A1", // Écrit à partir de la cellule A1 dans l'onglet "donnees"
-    valueInputOption: "RAW",
-    resource: { values: data }
-  }).then(function(response) {
-    console.log("Données envoyées avec succès !");
-    alert("Données envoyées avec succès !");
-  }, function(error) {
-    console.error("Erreur :", error.result.error.message);
-    alert("Erreur : " + error.result.error.message);
-  });
-}
-
-  // Affiche les données dans la page
-  function displayData(data) {
-    const container = document.getElementById("data-container");
-    if (!container) return;
-
-    let html = "<h2>Données récupérées :</h2><table border='1'>";
-    if (data && data.length > 0) {
-      data.forEach(row => {
-        html += "<tr>";
-        row.forEach(cell => {
-          html += `<td>${cell}</td>`;
-        });
-        html += "</tr>";
-      });
-    } else {
-      html += "<tr><td>Aucune donnée disponible.</td></tr>";
-    }
-    html += "</table>";
-    container.innerHTML = html;
-  }
-
-  // Charge l'API au démarrage
-  loadGoogleAPI();
-</script>
-
 </body>
 </html>
