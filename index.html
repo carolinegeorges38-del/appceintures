@@ -133,13 +133,71 @@
           { id: 'etoilee3', name: 'Étoilée 3', color: '#ffd700', special: '⭐⭐⭐' }
         ];
 
+        // 🔐 MOTS DE PASSE DES ÉLÈVES (format: prénom → mot de passe)
+        const STUDENT_PASSWORDS = {
+          'Adèle': '2112',
+          'Antoine': '0810',
+          'Arthur': '2107',
+          'Candice': '0704',
+          'Clarisse': '1011',
+          'Clémence': '0710',
+          'Constance': '2601',
+          'Elena': '0705',
+          'Eustache': '2408',
+          'Flor': '1809',
+          'Gabriel': '1407',
+          'Hélie': '1905',
+          'Kevin': '2606',
+          'Léonie': '2609',
+          'Lise': '1412',
+          'Madeleine': '1011',
+          'Maëlys': '2907',
+          'Malo': '0101',
+          'Maxence': '2509',
+          'Morgane': '1711',
+          'Noah': '2712',
+          'Oscar': '1305',
+          'Paul': '2712',
+          'Quentin': '1406',
+          'Raphaël': '1802',
+          'Simon': '2501',
+          'Tessa': '0701',
+          'Thibault': '2005',
+          'Timothée': '2503',
+          'Tomas': '2302'
+        };
+
         const DEMO_STUDENTS = [
-          { name: 'Alice', gender: 'F' },
-          { name: 'Baptiste', gender: 'M' },
-          { name: 'Chloé', gender: 'F' },
-          { name: 'David', gender: 'M' },
-          { name: 'Emma', gender: 'F' },
-          { name: 'Félix', gender: 'M' }
+          { name: 'Adèle', gender: 'F' },
+          { name: 'Antoine', gender: 'M' },
+          { name: 'Arthur', gender: 'M' },
+          { name: 'Candice', gender: 'F' },
+          { name: 'Clarisse', gender: 'F' },
+          { name: 'Clémence', gender: 'F' },
+          { name: 'Constance', gender: 'F' },
+          { name: 'Elena', gender: 'F' },
+          { name: 'Eustache', gender: 'M' },
+          { name: 'Flor', gender: 'F' },
+          { name: 'Gabriel', gender: 'M' },
+          { name: 'Hélie', gender: 'M' },
+          { name: 'Kevin', gender: 'M' },
+          { name: 'Léonie', gender: 'F' },
+          { name: 'Lise', gender: 'F' },
+          { name: 'Madeleine', gender: 'F' },
+          { name: 'Maëlys', gender: 'F' },
+          { name: 'Malo', gender: 'M' },
+          { name: 'Maxence', gender: 'M' },
+          { name: 'Morgane', gender: 'F' },
+          { name: 'Noah', gender: 'M' },
+          { name: 'Oscar', gender: 'M' },
+          { name: 'Paul', gender: 'M' },
+          { name: 'Quentin', gender: 'M' },
+          { name: 'Raphaël', gender: 'M' },
+          { name: 'Simon', gender: 'M' },
+          { name: 'Tessa', gender: 'F' },
+          { name: 'Thibault', gender: 'M' },
+          { name: 'Timothée', gender: 'M' },
+          { name: 'Tomas', gender: 'M' }
         ];
 
         const Card = ({ children, className = '', style = {}, onClick }) => (
@@ -169,6 +227,8 @@
           const [loading, setLoading] = useState(true);
           const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState(false);
           const [teacherPassword, setTeacherPassword] = useState('');
+          const [selectedStudentForLogin, setSelectedStudentForLogin] = useState(null);
+          const [studentPassword, setStudentPassword] = useState('');
           
           // 🔐 MOT DE PASSE ENSEIGNANTE - Changez-le ici !
           const TEACHER_PASSWORD = '191090';
@@ -421,24 +481,91 @@
           }
 
           if (view === 'student' && !currentStudent) {
+            // Étape 1 : Sélection de l'élève
+            if (!selectedStudentForLogin) {
+              return (
+                <div className="min-h-screen bg-gradient p-4">
+                  <div className="max-w-4xl">
+                    <div className="flex items-center justify-between mb-8">
+                      <h1 className="text-3xl font-bold text-purple-900">Qui es-tu ?</h1>
+                      <Button onClick={() => setView('login')} variant="outline">Retour</Button>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                      {[...students].sort((a, b) => a.name.localeCompare(b.name)).map(student => (
+                        <Card key={student.id} className="cursor-pointer hover:shadow-lg transition-all"
+                              onClick={() => setSelectedStudentForLogin(student.name)}>
+                          <CardContent className="text-center p-6">
+                            <div className="text-4xl mb-2">{student.gender === 'F' ? '👧' : '👦'}</div>
+                            <p className="font-semibold text-lg">{student.name}</p>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            
+            // Étape 2 : Saisie du mot de passe
             return (
               <div className="min-h-screen bg-gradient p-4">
                 <div className="max-w-4xl">
                   <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold text-purple-900">Qui es-tu ?</h1>
-                    <Button onClick={() => setView('login')} variant="outline">Retour</Button>
+                    <h1 className="text-3xl font-bold text-purple-900">Connexion</h1>
+                    <Button onClick={() => {
+                      setSelectedStudentForLogin(null);
+                      setStudentPassword('');
+                    }} variant="outline">Retour</Button>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {students.map(student => (
-                      <Card key={student.id} className="cursor-pointer hover:shadow-lg transition-all"
-                            onClick={() => setCurrentStudent(student.name)}>
-                        <CardContent className="text-center p-6">
-                          <div className="text-4xl mb-2">{student.gender === 'F' ? '👧' : '👦'}</div>
-                          <p className="font-semibold text-lg">{student.name}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                  
+                  <Card>
+                    <CardContent className="p-8">
+                      <div className="text-center mb-6">
+                        <div className="text-6xl mb-4">
+                          {students.find(s => s.name === selectedStudentForLogin)?.gender === 'F' ? '👧' : '👦'}
+                        </div>
+                        <h2 className="text-2xl font-bold mb-2">{selectedStudentForLogin}</h2>
+                        <p className="text-gray-600 text-sm">Entre ton code secret</p>
+                      </div>
+                      
+                      <form onSubmit={(e) => {
+                        e.preventDefault();
+                        if (studentPassword === STUDENT_PASSWORDS[selectedStudentForLogin]) {
+                          setCurrentStudent(selectedStudentForLogin);
+                          setSelectedStudentForLogin(null);
+                          setStudentPassword('');
+                        } else {
+                          alert('❌ Code incorrect ! Vérifie ton code.');
+                          setStudentPassword('');
+                        }
+                      }}>
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold mb-2">Ton code secret (4 chiffres)</label>
+                          <input 
+                            type="password" 
+                            value={studentPassword}
+                            onChange={(e) => setStudentPassword(e.target.value)}
+                            placeholder="****"
+                            maxLength="4"
+                            pattern="[0-9]*"
+                            inputMode="numeric"
+                            autoFocus
+                            className="text-lg text-center"
+                            style={{fontSize: '2rem', letterSpacing: '0.5rem'}}
+                          />
+                        </div>
+                        
+                        <Button 
+                          type="submit"
+                          className="w-full"
+                          disabled={studentPassword.length !== 4}
+                          style={{backgroundColor: '#6366f1', color: 'white', padding: '0.75rem'}}
+                        >
+                          Se connecter
+                        </Button>
+                      </form>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
             );
@@ -448,7 +575,11 @@
             return <StudentView 
               student={currentStudent}
               data={studentData[currentStudent]}
-              onBack={() => setCurrentStudent(null)}
+              onBack={() => {
+                setCurrentStudent(null);
+                setSelectedStudentForLogin(null);
+                setStudentPassword('');
+              }}
               onAddTraining={addTraining}
               isStudentReady={isStudentReady}
               getProgressForGauge={getProgressForGauge}
@@ -806,7 +937,7 @@
                     <CardContent className="p-6">
                       <h2 className="text-xl font-bold mb-4">Liste ({students.length})</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                        {students.map(s => (
+                        {[...students].sort((a, b) => a.name.localeCompare(b.name)).map(s => (
                           <Card key={s.id} className="relative">
                             <CardContent className="text-center p-4">
                               <button onClick={() => confirm(`Supprimer ${s.name} ?`) && onRemoveStudent(s.name)}
@@ -935,7 +1066,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                          {students.map(stu => (
+                          {[...students].sort((a, b) => a.name.localeCompare(b.name)).map(stu => (
                             <tr key={stu.id} className="hover:bg-gray-50">
                               <td className="font-semibold">
                                 <span className="text-xl">{stu.gender === 'F' ? '👧' : '👦'}</span> {stu.name}
