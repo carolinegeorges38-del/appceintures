@@ -652,7 +652,11 @@
                               </div>
                               <div>
                                 <p className="font-semibold text-lg">Ceinture {currentBelt.name}</p>
-                                <p className="text-sm text-gray-600">En cours</p>
+                                <p className="text-sm text-gray-600">
+                                  {BELTS[subjectData.currentBelt + 1] ? 
+                                    `Tu t'entraînes pour la ${BELTS[subjectData.currentBelt + 1].name}` : 
+                                    'Niveau maximum atteint !'}
+                                </p>
                               </div>
                             </div>
                             <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden mt-3">
@@ -707,8 +711,16 @@
                         {currentBelt.special || ''}
                       </div>
                       <div>
-                        <h2 className="text-2xl font-bold">Ceinture {currentBelt.name}</h2>
-                        <p className="text-gray-600">Objectif actuel</p>
+                        <p className="text-sm text-gray-600">
+                          {BELTS[subjectData.currentBelt + 1] ? 
+                            `Tu as la ceinture ${currentBelt.name}` : 
+                            `Bravo ! Tu es au niveau maximum`}
+                        </p>
+                        <h2 className="text-2xl font-bold">
+                          {BELTS[subjectData.currentBelt + 1] ? 
+                            `Tu t'entraînes pour passer la ${BELTS[subjectData.currentBelt + 1].name}` : 
+                            `Ceinture ${currentBelt.name}`}
+                        </h2>
                       </div>
                     </div>
 
