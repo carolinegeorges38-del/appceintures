@@ -809,6 +809,7 @@
                     subjectId: subId,
                     subjectColor: sub.color,
                     belt: BELTS[data.currentBelt].name,
+                    nextBelt: BELTS[data.currentBelt + 1]?.name || 'Max',
                     trainingsCount: data.trainings.length,
                     successRate: Math.round(getSuccessRate(data.trainings) * 100)
                   });
@@ -1024,7 +1025,9 @@
                                     <p className="text-sm" style={{color: item.subjectColor}}>
                                       <strong>{item.subject}</strong>
                                     </p>
-                                    <p className="text-sm text-gray-600">{item.belt}</p>
+                                    <p className="text-sm text-gray-600">
+                                      Ceinture {item.belt} → <span className="text-green-600 font-semibold">{item.nextBelt}</span>
+                                    </p>
                                     <p className="text-xs text-green-600">{item.trainingsCount} • {item.successRate}%</p>
                                   </div>
                                 </div>
