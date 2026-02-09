@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -138,7 +139,7 @@
           'Adèle': '2112',
           'Antoine': '0810',
           'Arthur': '2107',
-          'Candice': '1402',
+          'Candice': '0704',
           'Clarisse': '1011',
           'Clémence': '0710',
           'Constance': '2601',
@@ -147,7 +148,7 @@
           'Flor': '1809',
           'Gabriel': '1407',
           'Hélie': '1905',
-          'Kévin': '2606',
+          'Kevin': '2606',
           'Léonie': '2609',
           'Lise': '1412',
           'Madeleine': '1011',
@@ -180,7 +181,7 @@
           { name: 'Flor', gender: 'F' },
           { name: 'Gabriel', gender: 'M' },
           { name: 'Hélie', gender: 'M' },
-          { name: 'Kévin', gender: 'M' },
+          { name: 'Kevin', gender: 'M' },
           { name: 'Léonie', gender: 'F' },
           { name: 'Lise', gender: 'F' },
           { name: 'Madeleine', gender: 'F' },
@@ -1081,18 +1082,19 @@
                                 return (
                                   <td key={sub.id} className="text-center cursor-pointer"
                                       onClick={() => setShowBeltManager({student: stu.name, subjectId: sub.id})}>
-<div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-     style={{
-       backgroundColor: belt.color,
-       border: belt.border ? `2px solid ${belt.border}` : 'none',
-       color: belt.id === 'noire' ? 'white' : 'black',
-       lineHeight: '2rem',
-       display: 'flex',
-       alignItems: 'center',
-       justifyContent: 'center'
-     }}>
-  {belt.special || belt.name.charAt(0).toUpperCase()}
-</div>
+                                    <div className="flex flex-col items-center">
+                                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                                           style={{
+                                             backgroundColor: belt.color,
+                                             border: belt.border ? `2px solid ${belt.border}` : 'none',
+                                             color: belt.id === 'noire' ? 'white' : 'black',
+                                             lineHeight: '2rem',
+                                             display: 'flex',
+                                             alignItems: 'center',
+                                             justifyContent: 'center'
+                                           }}>
+                                        {belt.special || belt.name.charAt(0).toUpperCase()}
+                                      </div>
                                       {d.trainings.length > 0 && (
                                         <div className="text-xs">
                                           <span style={{color: ready ? '#22c55e' : '#6b7280'}}>
