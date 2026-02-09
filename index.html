@@ -1054,13 +1054,13 @@
                 <Card>
                   <CardContent className="p-6">
                     <h2 className="text-2xl font-bold mb-4">Vue classe</h2>
-                    <div className="overflow-x-auto">
-                      <table>
-                        <thead>
+                    <div style={{maxHeight: '600px', overflow: 'auto', position: 'relative'}}>
+                      <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                        <thead style={{position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 10, boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
                           <tr>
-                            <th className="text-left">Élève</th>
+                            <th className="text-left" style={{padding: '0.75rem', backgroundColor: 'white'}}>Élève</th>
                             {SUBJECTS.filter(s => !selectedSubject || s.id === selectedSubject).map(s => (
-                              <th key={s.id} className="text-center">
+                              <th key={s.id} className="text-center" style={{padding: '0.75rem', backgroundColor: 'white'}}>
                                 <div style={{color: s.color}} className="font-bold">{s.name}</div>
                               </th>
                             ))}
