@@ -85,9 +85,8 @@
 <body>
     <div id="root"></div>
     
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- Google API -->
+    <script src="https://apis.google.com/js/api.js"></script>
     
     <!-- React -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -97,19 +96,13 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // 🔥 CONFIGURATION FIREBASE
-        const firebaseConfig = {
-          apiKey: "AIzaSyA1Vs3628dcDJBu1unYb59GMFJF5tuD8w0",
-          authDomain: "ceinturescm1.firebaseapp.com",
-          projectId: "ceinturescm1",
-          storageBucket: "ceinturescm1.firebasestorage.app",
-          messagingSenderId: "450198698949",
-          appId: "1:450198698949:web:2ef5a899b9090f286169ac"
-        };
+        // 📊 CONFIGURATION GOOGLE SHEETS
+        const SPREADSHEET_ID = '1_rDAAO8ov8pzV6O8ET2Auz95C7Q2Vzu3lPsWaeB7oEA';
+        const API_KEY = 'AIzaSyAxEz8V8Y5Jw4EtCifiUWpCJDYt5DVqIDs';
+        const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 
-        // Initialiser Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // Variables globales pour l'API Google
+        let gapiInited = false;
 
         const SUBJECTS = [
           { id: 'calcul', name: 'Calcul posé', color: '#9333ea' },
@@ -134,7 +127,7 @@
           { id: 'etoilee3', name: 'Étoilée 3', color: '#ffd700', special: '⭐⭐⭐' }
         ];
 
-        // 🔐 MOTS DE PASSE DES ÉLÈVES (format: prénom → mot de passe)
+        // 🔐 MOTS DE PASSE DES ÉLÈVES
         const STUDENT_PASSWORDS = {
           'Adèle': '2112',
           'Antoine': '0810',
@@ -201,6 +194,71 @@
           { name: 'Tomas', gender: 'M' }
         ];
 
+        // 📊 FONCTIONS GOOGLE SHEETS API
+        const initializeGapiClient = () => {
+          return new Promise((resolve) => {
+            gapi.load('client', async () => {
+              await gapi.client.init({
+                apiKey: API_KEY,
+                discoveryDocs: DISCOVERY_DOCS,
+              });
+              gapiInited = true;
+              resolve();
+            });
+          });
+        };
+
+        const readSheet = async (range) => {
+          try {
+            const response = await gapi.client.sheets.spreadsheets.values.get({
+              spreadsheetId: SPREADSHEET_ID,
+              range: range,
+            });
+            return response.result.values || [];
+          } catch (error) {
+            console.error('Erreur lecture:', error);
+            return [];
+          }
+        };
+
+        const writeSheet = async (range, values) => {
+          try {
+            await gapi.client.sheets.spreadsheets.values.update({
+              spreadsheetId: SPREADSHEET_ID,
+              range: range,
+              valueInputOption: 'RAW',
+              resource: { values: values },
+            });
+          } catch (error) {
+            console.error('Erreur écriture:', error);
+          }
+        };
+
+        const appendSheet = async (range, values) => {
+          try {
+            await gapi.client.sheets.spreadsheets.values.append({
+              spreadsheetId: SPREADSHEET_ID,
+              range: range,
+              valueInputOption: 'RAW',
+              insertDataOption: 'INSERT_ROWS',
+              resource: { values: values },
+            });
+          } catch (error) {
+            console.error('Erreur ajout:', error);
+          }
+        };
+
+        const clearSheet = async (range) => {
+          try {
+            await gapi.client.sheets.spreadsheets.values.clear({
+              spreadsheetId: SPREADSHEET_ID,
+              range: range,
+            });
+          } catch (error) {
+            console.error('Erreur clear:', error);
+          }
+        };
+
         const Card = ({ children, className = '', style = {}, onClick }) => (
             <div className={'card ' + className} style={style} onClick={onClick}>{children}</div>
         );
@@ -209,11 +267,11 @@
             <div className={className} style={{padding: '1.5rem', ...style}}>{children}</div>
         );
 
-        const Button = ({ children, onClick, variant = 'default', size, className = '', style = {}, disabled }) => {
+        const Button = ({ children, onClick, variant = 'default', size, className = '', style = {}, disabled, type }) => {
             const variantClass = variant === 'outline' ? 'btn-outline' : 'btn-default';
             const sizeClass = size === 'sm' ? 'btn-sm' : '';
             return (
-                <button onClick={onClick} disabled={disabled}
+                <button onClick={onClick} disabled={disabled} type={type}
                         className={variantClass + ' ' + sizeClass + ' ' + className} style={style}>
                     {children}
                 </button>
@@ -231,76 +289,147 @@
           const [selectedStudentForLogin, setSelectedStudentForLogin] = useState(null);
           const [studentPassword, setStudentPassword] = useState('');
           
-          // 🔐 MOT DE PASSE ENSEIGNANTE - Changez-le ici !
           const TEACHER_PASSWORD = '191090';
 
           useEffect(() => {
-            // 🔥 Écouter les changements en temps réel depuis Firebase
-            const unsubscribeStudents = db.collection('students').onSnapshot(snapshot => {
-              if (snapshot.empty) {
-                // Initialiser avec les élèves de démo
-                DEMO_STUDENTS.forEach(student => {
-                  db.collection('students').add(student);
-                });
-              } else {
-                const loadedStudents = snapshot.docs.map(doc => ({
-                  id: doc.id,
-                  ...doc.data()
-                }));
-                setStudents(loadedStudents);
-              }
-            });
-
-            const unsubscribeData = db.collection('studentData').onSnapshot(snapshot => {
-              const data = {};
-              snapshot.docs.forEach(doc => {
-                data[doc.id] = doc.data();
-              });
-              
-              if (Object.keys(data).length === 0) {
-                // Initialiser les données pour les élèves de démo
-                DEMO_STUDENTS.forEach(student => {
-                  const initialData = {};
-                  SUBJECTS.forEach(subject => {
-                    initialData[subject.id] = {
-                      currentBelt: 0,
-                      trainings: [],
-                      history: []
-                    };
-                  });
-                  db.collection('studentData').doc(student.name).set(initialData);
-                });
-              } else {
-                setStudentData(data);
-                setLoading(false);
-              }
-            });
-
-            return () => {
-              unsubscribeStudents();
-              unsubscribeData();
+            const init = async () => {
+              await initializeGapiClient();
+              await loadData();
+              setLoading(false);
             };
+            init();
           }, []);
 
+          const loadData = async () => {
+            // Charger les élèves
+            const studentsData = await readSheet('Élèves!A2:B');
+            if (studentsData.length === 0) {
+              // Initialiser avec les élèves de démo
+              const values = DEMO_STUDENTS.map(s => [s.name, s.gender]);
+              await writeSheet('Élèves!A1:B1', [['Nom', 'Genre']]);
+              await writeSheet('Élèves!A2:B', values);
+              setStudents(DEMO_STUDENTS);
+            } else {
+              const loadedStudents = studentsData.map((row, idx) => ({
+                id: idx,
+                name: row[0],
+                gender: row[1]
+              }));
+              setStudents(loadedStudents);
+            }
+
+            // Charger les données des élèves
+            const allData = await readSheet('Données!A2:Z');
+            const data = {};
+            
+            if (allData.length === 0) {
+              // Initialiser les données
+              const headers = ['Élève', 'Matière', 'CeintureActuelle', 'Entraînements', 'Historique'];
+              await writeSheet('Données!A1:E1', [headers]);
+              
+              for (const student of DEMO_STUDENTS) {
+                for (const subject of SUBJECTS) {
+                  await appendSheet('Données!A:E', [[
+                    student.name,
+                    subject.id,
+                    '0',
+                    '[]',
+                    '[]'
+                  ]]);
+                }
+                if (!data[student.name]) data[student.name] = {};
+                SUBJECTS.forEach(subject => {
+                  data[student.name][subject.id] = {
+                    currentBelt: 0,
+                    trainings: [],
+                    history: []
+                  };
+                });
+              }
+            } else {
+              allData.forEach(row => {
+                const studentName = row[0];
+                const subjectId = row[1];
+                const currentBelt = parseInt(row[2]) || 0;
+                const trainings = row[3] ? JSON.parse(row[3]) : [];
+                const history = row[4] ? JSON.parse(row[4]) : [];
+                
+                if (!data[studentName]) data[studentName] = {};
+                data[studentName][subjectId] = {
+                  currentBelt,
+                  trainings,
+                  history
+                };
+              });
+            }
+            
+            setStudentData(data);
+          };
+
+          const saveStudentData = async (studentName, subjectId, newData) => {
+            const allData = await readSheet('Données!A2:Z');
+            let rowIndex = -1;
+            
+            allData.forEach((row, idx) => {
+              if (row[0] === studentName && row[1] === subjectId) {
+                rowIndex = idx + 2; // +2 car ligne 1 = headers, index commence à 0
+              }
+            });
+
+            if (rowIndex !== -1) {
+              const values = [[
+                studentName,
+                subjectId,
+                newData.currentBelt.toString(),
+                JSON.stringify(newData.trainings),
+                JSON.stringify(newData.history || [])
+              ]];
+              await writeSheet(`Données!A${rowIndex}:E${rowIndex}`, values);
+            }
+
+            // Mettre à jour l'état local
+            const updatedData = { ...studentData };
+            if (!updatedData[studentName]) updatedData[studentName] = {};
+            updatedData[studentName][subjectId] = newData;
+            setStudentData(updatedData);
+          };
+
           const addStudent = async (name, gender) => {
-            // Ajouter l'élève
-            await db.collection('students').add({ name, gender });
+            // Ajouter dans le sheet Élèves
+            await appendSheet('Élèves!A:B', [[name, gender]]);
             
             // Initialiser ses données
-            const initialData = {};
-            SUBJECTS.forEach(subject => {
-              initialData[subject.id] = { currentBelt: 0, trainings: [], history: [] };
-            });
-            await db.collection('studentData').doc(name).set(initialData);
+            for (const subject of SUBJECTS) {
+              await appendSheet('Données!A:E', [[
+                name,
+                subject.id,
+                '0',
+                '[]',
+                '[]'
+              ]]);
+            }
+            
+            await loadData();
           };
 
           const removeStudent = async (name) => {
-            // Trouver et supprimer l'élève
-            const snapshot = await db.collection('students').where('name', '==', name).get();
-            snapshot.docs.forEach(doc => doc.ref.delete());
+            // Recharger tout et réécrire sans l'élève supprimé
+            const studentsData = await readSheet('Élèves!A2:B');
+            const filtered = studentsData.filter(row => row[0] !== name);
+            await clearSheet('Élèves!A2:B');
+            if (filtered.length > 0) {
+              await writeSheet('Élèves!A2:B', filtered);
+            }
             
             // Supprimer ses données
-            await db.collection('studentData').doc(name).delete();
+            const allData = await readSheet('Données!A2:Z');
+            const filteredData = allData.filter(row => row[0] !== name);
+            await clearSheet('Données!A2:Z');
+            if (filteredData.length > 0) {
+              await writeSheet('Données!A2:Z', filteredData);
+            }
+            
+            await loadData();
           };
 
           const isStudentReady = (trainings) => {
@@ -323,67 +452,50 @@
           };
 
           const addTraining = async (student, subject, errors) => {
-            const currentData = studentData[student] || {};
-            const subjectData = currentData[subject] || { currentBelt: 0, trainings: [], history: [] };
+            const currentData = studentData[student]?.[subject] || { currentBelt: 0, trainings: [], history: [] };
+            const updatedTrainings = [...currentData.trainings, { errors, date: Date.now() }];
             
-            const updatedTrainings = [...subjectData.trainings, { errors, date: Date.now() }];
-            
-            await db.collection('studentData').doc(student).set({
+            await saveStudentData(student, subject, {
               ...currentData,
-              [subject]: {
-                ...subjectData,
-                trainings: updatedTrainings
-              }
+              trainings: updatedTrainings
             });
           };
 
           const validateBelt = async (student, subject) => {
-            const currentData = studentData[student];
-            const subjectData = currentData[subject];
-            const currentBeltIndex = subjectData.currentBelt;
+            const currentData = studentData[student][subject];
+            const currentBeltIndex = currentData.currentBelt;
             
-            await db.collection('studentData').doc(student).set({
+            await saveStudentData(student, subject, {
               ...currentData,
-              [subject]: {
-                ...subjectData,
-                currentBelt: currentBeltIndex + 1,
-                trainings: [],
-                history: [
-                  ...(subjectData.history || []),
-                  {
-                    beltIndex: currentBeltIndex + 1,
-                    beltName: BELTS[currentBeltIndex + 1]?.name || '',
-                    date: Date.now()
-                  }
-                ]
-              }
+              currentBelt: currentBeltIndex + 1,
+              trainings: [],
+              history: [
+                ...(currentData.history || []),
+                {
+                  beltIndex: currentBeltIndex + 1,
+                  beltName: BELTS[currentBeltIndex + 1]?.name || '',
+                  date: Date.now()
+                }
+              ]
             });
           };
 
           const setBeltLevel = async (student, subject, beltIndex) => {
-            const currentData = studentData[student];
-            const subjectData = currentData[subject];
+            const currentData = studentData[student][subject];
             
-            await db.collection('studentData').doc(student).set({
+            await saveStudentData(student, subject, {
               ...currentData,
-              [subject]: {
-                ...subjectData,
-                currentBelt: beltIndex,
-                trainings: []
-              }
+              currentBelt: beltIndex,
+              trainings: []
             });
           };
 
           const rejectTest = async (student, subject) => {
-            const currentData = studentData[student];
-            const subjectData = currentData[subject];
+            const currentData = studentData[student][subject];
             
-            await db.collection('studentData').doc(student).set({
+            await saveStudentData(student, subject, {
               ...currentData,
-              [subject]: {
-                ...subjectData,
-                trainings: []
-              }
+              trainings: []
             });
           };
 
@@ -392,7 +504,7 @@
               <div className="min-h-screen bg-gradient p-4 flex items-center justify-center">
                 <div className="text-center">
                   <div className="text-6xl mb-4">⏳</div>
-                  <p className="text-xl text-purple-900">Chargement...</p>
+                  <p className="text-xl text-purple-900">Chargement depuis Google Sheets...</p>
                 </div>
               </div>
             );
@@ -482,7 +594,6 @@
           }
 
           if (view === 'student' && !currentStudent) {
-            // Étape 1 : Sélection de l'élève
             if (!selectedStudentForLogin) {
               return (
                 <div className="min-h-screen bg-gradient p-4">
@@ -507,7 +618,6 @@
               );
             }
             
-            // Étape 2 : Saisie du mot de passe
             return (
               <div className="min-h-screen bg-gradient p-4">
                 <div className="max-w-4xl">
@@ -607,9 +717,13 @@
               onSetBeltLevel={setBeltLevel}
               onAddStudent={addStudent}
               onRemoveStudent={removeStudent}
+              onReload={loadData}
             />;
           }
         };
+
+        // Composants StudentView et TeacherDashboard identiques à la version précédente
+        // (Je les inclurai dans la suite du fichier)
 
         const StudentView = ({ student, data, onBack, onAddTraining, isStudentReady, getProgressForGauge }) => {
           const [selectedSubject, setSelectedSubject] = useState(null);
@@ -628,6 +742,7 @@
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {SUBJECTS.map(subject => {
                       const subjectData = data[subject.id];
+                      if (!subjectData) return null;
                       const currentBelt = BELTS[subjectData.currentBelt];
                       const progress = getProgressForGauge(subjectData.trainings);
                       const ready = isStudentReady(subjectData.trainings);
@@ -801,7 +916,7 @@
         };
 
         const TeacherDashboard = ({ studentData, students, onBack, isStudentReady, getSuccessRate, 
-                                    onValidateBelt, onRejectTest, onSetBeltLevel, onAddStudent, onRemoveStudent }) => {
+                                    onValidateBelt, onRejectTest, onSetBeltLevel, onAddStudent, onRemoveStudent, onReload }) => {
           const [selectedSubject, setSelectedSubject] = useState(null);
           const [showManagement, setShowManagement] = useState(false);
           const [showBeltManager, setShowBeltManager] = useState(null);
@@ -976,6 +1091,9 @@
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-3xl font-bold text-purple-900">Tableau de bord</h1>
                   <div className="flex gap-2">
+                    <Button onClick={onReload} variant="outline" style={{backgroundColor: '#3b82f6', color: 'white'}}>
+                      🔄 Actualiser
+                    </Button>
                     <Button onClick={() => setShowManagement(true)} variant="outline">👥 Élèves</Button>
                     <Button onClick={onBack} variant="outline">Déconnexion</Button>
                   </div>
@@ -1137,4 +1255,3 @@
     </script>
 </body>
 </html>
-
