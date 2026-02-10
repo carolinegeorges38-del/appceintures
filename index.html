@@ -85,10 +85,6 @@
 <body>
     <div id="root"></div>
     
-    <!-- Google API -->
-    <script src="https://apis.google.com/js/api.js"></script>
-    
-    <!-- React -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -96,13 +92,8 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // 📊 CONFIGURATION GOOGLE SHEETS
-        const SPREADSHEET_ID = '1_rDAAO8ov8pzV6O8ET2Auz95C7Q2Vzu3lPsWaeB7oEA';
-        const API_KEY = 'AIzaSyAxEz8V8Y5Jw4EtCifiUWpCJDYt5DVqIDs';
-        const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-
-        // Variables globales pour l'API Google
-        let gapiInited = false;
+        // 📊 URL DU SCRIPT GOOGLE APPS
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxON1_c8tQ7Cvg9wrTE0H1wCCduZ38zk01IWPkVp7Cy28TyZdea4hNAd6u3jlXO9k29/exec';
 
         const SUBJECTS = [
           { id: 'calcul', name: 'Calcul posé', color: '#9333ea' },
@@ -127,7 +118,6 @@
           { id: 'etoilee3', name: 'Étoilée 3', color: '#ffd700', special: '⭐⭐⭐' }
         ];
 
-        // 🔐 MOTS DE PASSE DES ÉLÈVES
         const STUDENT_PASSWORDS = {
           'Adèle': '2112',
           'Antoine': '0810',
@@ -194,69 +184,18 @@
           { name: 'Tomas', gender: 'M' }
         ];
 
-        // 📊 FONCTIONS GOOGLE SHEETS API
-        const initializeGapiClient = () => {
-          return new Promise((resolve) => {
-            gapi.load('client', async () => {
-              await gapi.client.init({
-                apiKey: API_KEY,
-                discoveryDocs: DISCOVERY_DOCS,
-              });
-              gapiInited = true;
-              resolve();
-            });
+        // Fonctions API
+        const apiGet = async (action) => {
+          const response = await fetch(`${SCRIPT_URL}?action=${action}`);
+          return await response.json();
+        };
+
+        const apiPost = async (data) => {
+          const response = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(data)
           });
-        };
-
-        const readSheet = async (range) => {
-          try {
-            const response = await gapi.client.sheets.spreadsheets.values.get({
-              spreadsheetId: SPREADSHEET_ID,
-              range: range,
-            });
-            return response.result.values || [];
-          } catch (error) {
-            console.error('Erreur lecture:', error);
-            return [];
-          }
-        };
-
-        const writeSheet = async (range, values) => {
-          try {
-            await gapi.client.sheets.spreadsheets.values.update({
-              spreadsheetId: SPREADSHEET_ID,
-              range: range,
-              valueInputOption: 'RAW',
-              resource: { values: values },
-            });
-          } catch (error) {
-            console.error('Erreur écriture:', error);
-          }
-        };
-
-        const appendSheet = async (range, values) => {
-          try {
-            await gapi.client.sheets.spreadsheets.values.append({
-              spreadsheetId: SPREADSHEET_ID,
-              range: range,
-              valueInputOption: 'RAW',
-              insertDataOption: 'INSERT_ROWS',
-              resource: { values: values },
-            });
-          } catch (error) {
-            console.error('Erreur ajout:', error);
-          }
-        };
-
-        const clearSheet = async (range) => {
-          try {
-            await gapi.client.sheets.spreadsheets.values.clear({
-              spreadsheetId: SPREADSHEET_ID,
-              range: range,
-            });
-          } catch (error) {
-            console.error('Erreur clear:', error);
-          }
+          return await response.json();
         };
 
         const Card = ({ children, className = '', style = {}, onClick }) => (
@@ -292,102 +231,61 @@
           const TEACHER_PASSWORD = '191090';
 
           useEffect(() => {
-            const init = async () => {
-              await initializeGapiClient();
-              await loadData();
-              setLoading(false);
-            };
-            init();
+            loadData();
           }, []);
 
           const loadData = async () => {
-            // Charger les élèves
-            const studentsData = await readSheet('Élèves!A2:B');
-            if (studentsData.length === 0) {
-              // Initialiser avec les élèves de démo
-              const values = DEMO_STUDENTS.map(s => [s.name, s.gender]);
-              await writeSheet('Élèves!A1:B1', [['Nom', 'Genre']]);
-              await writeSheet('Élèves!A2:B', values);
-              setStudents(DEMO_STUDENTS);
-            } else {
-              const loadedStudents = studentsData.map((row, idx) => ({
-                id: idx,
-                name: row[0],
-                gender: row[1]
-              }));
-              setStudents(loadedStudents);
-            }
-
-            // Charger les données des élèves
-            const allData = await readSheet('Données!A2:Z');
-            const data = {};
-            
-            if (allData.length === 0) {
-              // Initialiser les données
-              const headers = ['Élève', 'Matière', 'CeintureActuelle', 'Entraînements', 'Historique'];
-              await writeSheet('Données!A1:E1', [headers]);
+            setLoading(true);
+            try {
+              // Charger les élèves
+              const studentsResult = await apiGet('getStudents');
               
-              for (const student of DEMO_STUDENTS) {
-                for (const subject of SUBJECTS) {
-                  await appendSheet('Données!A:E', [[
-                    student.name,
-                    subject.id,
-                    '0',
-                    '[]',
-                    '[]'
-                  ]]);
+              if (studentsResult.students && studentsResult.students.length > 0) {
+                setStudents(studentsResult.students);
+              } else {
+                // Initialiser avec les élèves de démo
+                setStudents(DEMO_STUDENTS);
+                for (const student of DEMO_STUDENTS) {
+                  await apiPost({ action: 'addStudent', name: student.name, gender: student.gender });
                 }
-                if (!data[student.name]) data[student.name] = {};
-                SUBJECTS.forEach(subject => {
-                  data[student.name][subject.id] = {
-                    currentBelt: 0,
-                    trainings: [],
-                    history: []
-                  };
-                });
+                await apiPost({ action: 'initializeData', students: DEMO_STUDENTS, subjects: SUBJECTS });
               }
-            } else {
-              allData.forEach(row => {
-                const studentName = row[0];
-                const subjectId = row[1];
-                const currentBelt = parseInt(row[2]) || 0;
-                const trainings = row[3] ? JSON.parse(row[3]) : [];
-                const history = row[4] ? JSON.parse(row[4]) : [];
-                
-                if (!data[studentName]) data[studentName] = {};
-                data[studentName][subjectId] = {
-                  currentBelt,
-                  trainings,
-                  history
-                };
-              });
+
+              // Charger les données
+              const dataResult = await apiGet('getData');
+              
+              if (dataResult.data && Object.keys(dataResult.data).length > 0) {
+                setStudentData(dataResult.data);
+              } else {
+                // Initialiser les données
+                const initialData = {};
+                DEMO_STUDENTS.forEach(student => {
+                  initialData[student.name] = {};
+                  SUBJECTS.forEach(subject => {
+                    initialData[student.name][subject.id] = {
+                      currentBelt: 0,
+                      trainings: [],
+                      history: []
+                    };
+                  });
+                });
+                setStudentData(initialData);
+              }
+            } catch (error) {
+              console.error('Erreur chargement:', error);
+              alert('Erreur de chargement. Vérifiez votre connexion internet.');
             }
-            
-            setStudentData(data);
+            setLoading(false);
           };
 
           const saveStudentData = async (studentName, subjectId, newData) => {
-            const allData = await readSheet('Données!A2:Z');
-            let rowIndex = -1;
-            
-            allData.forEach((row, idx) => {
-              if (row[0] === studentName && row[1] === subjectId) {
-                rowIndex = idx + 2; // +2 car ligne 1 = headers, index commence à 0
-              }
+            await apiPost({
+              action: 'saveStudentData',
+              student: studentName,
+              subject: subjectId,
+              subjectData: newData
             });
 
-            if (rowIndex !== -1) {
-              const values = [[
-                studentName,
-                subjectId,
-                newData.currentBelt.toString(),
-                JSON.stringify(newData.trainings),
-                JSON.stringify(newData.history || [])
-              ]];
-              await writeSheet(`Données!A${rowIndex}:E${rowIndex}`, values);
-            }
-
-            // Mettre à jour l'état local
             const updatedData = { ...studentData };
             if (!updatedData[studentName]) updatedData[studentName] = {};
             updatedData[studentName][subjectId] = newData;
@@ -395,40 +293,22 @@
           };
 
           const addStudent = async (name, gender) => {
-            // Ajouter dans le sheet Élèves
-            await appendSheet('Élèves!A:B', [[name, gender]]);
+            await apiPost({ action: 'addStudent', name, gender });
             
-            // Initialiser ses données
             for (const subject of SUBJECTS) {
-              await appendSheet('Données!A:E', [[
-                name,
-                subject.id,
-                '0',
-                '[]',
-                '[]'
-              ]]);
+              await apiPost({
+                action: 'saveStudentData',
+                student: name,
+                subject: subject.id,
+                subjectData: { currentBelt: 0, trainings: [], history: [] }
+              });
             }
             
             await loadData();
           };
 
           const removeStudent = async (name) => {
-            // Recharger tout et réécrire sans l'élève supprimé
-            const studentsData = await readSheet('Élèves!A2:B');
-            const filtered = studentsData.filter(row => row[0] !== name);
-            await clearSheet('Élèves!A2:B');
-            if (filtered.length > 0) {
-              await writeSheet('Élèves!A2:B', filtered);
-            }
-            
-            // Supprimer ses données
-            const allData = await readSheet('Données!A2:Z');
-            const filteredData = allData.filter(row => row[0] !== name);
-            await clearSheet('Données!A2:Z');
-            if (filteredData.length > 0) {
-              await writeSheet('Données!A2:Z', filteredData);
-            }
-            
+            await apiPost({ action: 'removeStudent', name });
             await loadData();
           };
 
@@ -603,8 +483,8 @@
                       <Button onClick={() => setView('login')} variant="outline">Retour</Button>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                      {[...students].sort((a, b) => a.name.localeCompare(b.name)).map(student => (
-                        <Card key={student.id} className="cursor-pointer hover:shadow-lg transition-all"
+                      {[...students].sort((a, b) => a.name.localeCompare(b.name)).map((student, idx) => (
+                        <Card key={idx} className="cursor-pointer hover:shadow-lg transition-all"
                               onClick={() => setSelectedStudentForLogin(student.name)}>
                           <CardContent className="text-center p-6">
                             <div className="text-4xl mb-2">{student.gender === 'F' ? '👧' : '👦'}</div>
@@ -721,9 +601,6 @@
             />;
           }
         };
-
-        // Composants StudentView et TeacherDashboard identiques à la version précédente
-        // (Je les inclurai dans la suite du fichier)
 
         const StudentView = ({ student, data, onBack, onAddTraining, isStudentReady, getProgressForGauge }) => {
           const [selectedSubject, setSelectedSubject] = useState(null);
@@ -930,16 +807,18 @@
               Object.entries(subjects).forEach(([subId, data]) => {
                 if (isStudentReady(data.trainings)) {
                   const sub = SUBJECTS.find(s => s.id === subId);
-                  result.push({
-                    student: name,
-                    subject: sub.name,
-                    subjectId: subId,
-                    subjectColor: sub.color,
-                    belt: BELTS[data.currentBelt].name,
-                    nextBelt: BELTS[data.currentBelt + 1]?.name || 'Max',
-                    trainingsCount: data.trainings.length,
-                    successRate: Math.round(getSuccessRate(data.trainings) * 100)
-                  });
+                  if (sub) {
+                    result.push({
+                      student: name,
+                      subject: sub.name,
+                      subjectId: subId,
+                      subjectColor: sub.color,
+                      belt: BELTS[data.currentBelt].name,
+                      nextBelt: BELTS[data.currentBelt + 1]?.name || 'Max',
+                      trainingsCount: data.trainings.length,
+                      successRate: Math.round(getSuccessRate(data.trainings) * 100)
+                    });
+                  }
                 }
               });
             });
@@ -1066,8 +945,8 @@
                     <CardContent className="p-6">
                       <h2 className="text-xl font-bold mb-4">Liste ({students.length})</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                        {[...students].sort((a, b) => a.name.localeCompare(b.name)).map(s => (
-                          <Card key={s.id} className="relative">
+                        {[...students].sort((a, b) => a.name.localeCompare(b.name)).map((s, idx) => (
+                          <Card key={idx} className="relative">
                             <CardContent className="text-center p-4">
                               <button onClick={() => confirm(`Supprimer ${s.name} ?`) && onRemoveStudent(s.name)}
                                       className="absolute top-2 right-2 text-red-600 text-xl"
@@ -1200,8 +1079,8 @@
                           </tr>
                         </thead>
                         <tbody>
-                          {[...students].sort((a, b) => a.name.localeCompare(b.name)).map(stu => (
-                            <tr key={stu.id} className="hover:bg-gray-50">
+                          {[...students].sort((a, b) => a.name.localeCompare(b.name)).map((stu, idx) => (
+                            <tr key={idx} className="hover:bg-gray-50">
                               <td className="font-semibold">
                                 <span className="text-xl">{stu.gender === 'F' ? '👧' : '👦'}</span> {stu.name}
                               </td>
@@ -1255,3 +1134,4 @@
     </script>
 </body>
 </html>
+
