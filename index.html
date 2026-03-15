@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -18,8 +19,8 @@
         .max-w-4xl, .max-w-6xl, .max-w-7xl { margin-left: auto; margin-right: auto; }
         .max-w-4xl { max-width: 56rem; } .max-w-6xl { max-width: 72rem; } .max-w-7xl { max-width: 80rem; }
         .flex { display: flex; } .flex-col { flex-direction: column; } .flex-wrap { flex-wrap: wrap; }
-        .items-center { align-items: center; } .items-end { align-items: flex-end; }
-        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; } .items-start { align-items: flex-start; } .items-end { align-items: flex-end; }
+        .justify-between { justify-content: space-between; } .justify-center { justify-content: center; }
         .grid { display: grid; }
         .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
         .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -32,8 +33,8 @@
             .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
             .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         }
-        .text-center { text-align: center; } .text-left { text-align: left; }
-        .font-bold { font-weight: 700; } .font-semibold { font-weight: 600; }
+        .text-center { text-align: center; } .text-left { text-align: left; } .text-right { text-align: right; }
+        .font-bold { font-weight: 700; } .font-semibold { font-weight: 600; } .font-medium { font-weight: 500; }
         .text-xs { font-size: 0.75rem; } .text-sm { font-size: 0.875rem; } .text-base { font-size: 1rem; }
         .text-lg { font-size: 1.125rem; } .text-xl { font-size: 1.25rem; } .text-2xl { font-size: 1.5rem; }
         .text-3xl { font-size: 1.875rem; } .text-4xl { font-size: 2.25rem; } .text-6xl { font-size: 3.75rem; }
@@ -60,6 +61,7 @@
         .relative { position: relative; } .absolute { position: absolute; }
         .top-2 { top: 0.5rem; } .right-2 { right: 0.5rem; }
         .italic { font-style: italic; } .block { display: block; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
         .card { background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); }
         button { cursor: pointer; border: none; border-radius: 0.375rem; font-weight: 500;
                  transition: all 0.2s; padding: 0.5rem 1rem; font-size: 1rem; }
@@ -80,363 +82,379 @@
         .badge-success { background: #dcfce7; color: #166534; }
         .badge-warning { background: #fef3c7; color: #92400e; }
 
-        /* ===== LIVRET STYLES ===== */
+        /* ── LIVRET ── */
         .livret-belt-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s;
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; transition: all 0.2s;
         }
-        .livret-belt-row.validated {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-        }
-        .livret-belt-row.current {
-            background: #fffbeb;
-            border: 2px solid #fbbf24;
-        }
-        .livret-belt-row.locked {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            opacity: 0.6;
-        }
+        .livret-belt-row.validated { background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .livret-belt-row.current   { background: #fffbeb; border: 2px solid #fbbf24; }
+        .livret-belt-row.locked    { background: #f9fafb; border: 1px solid #e5e7eb; opacity: 0.6; }
         .livret-belt-badge {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.75rem;
-            flex-shrink: 0;
-            margin-top: 0.1rem;
+            width: 2.5rem; height: 2.5rem; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.75rem; flex-shrink: 0; margin-top: 0.1rem;
         }
-        .livret-status-icon {
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            margin-top: 0.2rem;
-        }
-        .livret-competence-text {
-            flex: 1;
-            font-size: 0.875rem;
-            line-height: 1.4;
-        }
+        .livret-status-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.2rem; }
+        .livret-competence-text { flex: 1; font-size: 0.875rem; line-height: 1.4; }
         .livret-competence-text .belt-name {
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.2rem;
+            font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 0.05em; margin-bottom: 0.2rem;
         }
-        .livret-competence-text .belt-desc {
-            color: #4b5563;
-        }
-        .livret-validated-date {
-            font-size: 0.7rem;
-            color: #16a34a;
-            font-weight: 600;
-            white-space: nowrap;
-            margin-top: 0.2rem;
-        }
-        .subject-livret-card {
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 1.5rem;
-        }
-        .subject-livret-header {
-            padding: 1rem 1.25rem;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .subject-livret-body {
-            background: white;
-            padding: 1rem 1.25rem;
-        }
-        .progress-bar-livret {
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 9999px;
-            overflow: hidden;
-            margin-top: 0.5rem;
-        }
-        .progress-bar-livret-fill {
-            height: 100%;
-            border-radius: 9999px;
-            transition: width 0.5s ease;
-        }
-        .student-selector-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 0.75rem;
-        }
+        .livret-competence-text .belt-desc { color: #4b5563; }
+        .livret-validated-date { font-size: 0.7rem; color: #16a34a; font-weight: 600; white-space: nowrap; margin-top: 0.2rem; }
+        .subject-livret-card { border-radius: 0.75rem; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+        .subject-livret-header { padding: 1rem 1.25rem; color: white; display: flex; align-items: center; justify-content: space-between; }
+        .subject-livret-body { background: white; padding: 1rem 1.25rem; }
+        .progress-bar-livret { height: 6px; background: #e5e7eb; border-radius: 9999px; overflow: hidden; margin-top: 0.5rem; }
+        .progress-bar-livret-fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease; }
+        .student-selector-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.75rem; }
         .student-selector-card {
-            background: white;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            border: 2px solid transparent;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            transition: all 0.2s;
+            background: white; border-radius: 0.5rem; padding: 1rem; text-align: center;
+            cursor: pointer; border: 2px solid transparent; box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: all 0.2s;
         }
-        .student-selector-card:hover {
-            border-color: #a78bfa;
-            box-shadow: 0 4px 12px rgba(167,139,250,0.2);
-            transform: translateY(-2px);
-        }
+        .student-selector-card:hover { border-color: #a78bfa; box-shadow: 0 4px 12px rgba(167,139,250,0.2); transform: translateY(-2px); }
         .objective-tag {
-            display: inline-block;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 0.1rem 0.4rem;
-            border-radius: 9999px;
-            background: #fef3c7;
-            color: #92400e;
-            margin-left: 0.4rem;
-            vertical-align: middle;
+            display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.1rem 0.4rem;
+            border-radius: 9999px; background: #fef3c7; color: #92400e; margin-left: 0.4rem; vertical-align: middle;
         }
+
+        /* ── DIFFICULTÉS ── */
+        .difficulty-flag {
+            display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.7rem;
+            padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-weight: 700; white-space: nowrap;
+        }
+        .flag-red    { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .flag-orange { background: #fff7ed; color: #92400e; border: 1px solid #fdba74; }
+        .difficulty-section {
+            background: #fef2f2; border: 2px solid #fca5a5; border-radius: 0.5rem;
+            padding: 1.5rem; margin-bottom: 1.5rem;
+        }
+        .difficulty-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.625rem 0.875rem; background: white; border-radius: 0.375rem;
+            margin-bottom: 0.5rem; border-left: 4px solid #ef4444; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .difficulty-item.warning { border-left-color: #f97316; }
+        .stat-pill { display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.7rem; padding: 0.1rem 0.35rem; border-radius: 999px; font-weight: 600; }
+        .stat-pill-red    { background: #fee2e2; color: #b91c1c; }
+        .stat-pill-orange { background: #fff7ed; color: #c2410c; }
+        .stat-pill-gray   { background: #f3f4f6; color: #4b5563; }
+
+        /* ── VUE PAR ÉLÈVE ── */
+        .view-toggle { display: flex; gap: 0; border: 1.5px solid #d1d5db; border-radius: 0.5rem; overflow: hidden; margin-bottom: 1.5rem; }
+        .view-toggle button { border-radius: 0; border: none; flex: 1; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; background: white; color: #6b7280; transition: all 0.15s; }
+        .view-toggle button.active { background: #6366f1; color: white; }
+        .view-toggle button:not(.active):hover { background: #f3f4f6; }
+        .student-next-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .student-next-card { background: white; border-radius: 0.625rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden; transition: box-shadow 0.2s; }
+        .student-next-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .student-next-card-header { padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+        .student-next-card-body { padding: 0.5rem 1rem 0.875rem; }
+        .next-belt-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0; border-bottom: 1px solid #f3f4f6; }
+        .next-belt-row:last-child { border-bottom: none; }
+        .next-belt-dot { width: 1.5rem; height: 1.5rem; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 700; }
+        .next-belt-subject { font-size: 0.75rem; font-weight: 600; flex: 1; }
+        .next-belt-name { font-size: 0.7rem; color: #6b7280; }
+        .next-belt-status { font-size: 0.75rem; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+
     <script type="text/babel">
         const { useState, useEffect } = React;
 
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxON1_c8tQ7Cvg9wrTE0H1wCCduZ38zk01IWPkVp7Cy28TyZdea4hNAd6u3jlXO9k29/exec';
 
         const SUBJECTS = [
-          { id: 'calcul', name: 'Calcul posé', color: '#9333ea' },
-          { id: 'grammaire', name: 'Grammaire', color: '#ec4899' },
-          { id: 'mesures', name: 'Mesures', color: '#eab308' },
-          { id: 'homophones', name: 'Homophones', color: '#f97316' },
-          { id: 'conjugaison', name: 'Conjugaison', color: '#06b6d4' }
+          { id: 'calcul',      name: 'Calcul posé',  color: '#9333ea' },
+          { id: 'grammaire',   name: 'Grammaire',    color: '#ec4899' },
+          { id: 'mesures',     name: 'Mesures',      color: '#eab308' },
+          { id: 'homophones',  name: 'Homophones',   color: '#f97316' },
+          { id: 'conjugaison', name: 'Conjugaison',  color: '#06b6d4' }
         ];
 
         const BELTS = [
-          { id: 'blanche', name: 'Blanche', color: '#ffffff', border: '#e5e7eb' },
-          { id: 'jaune', name: 'Jaune', color: '#fef08a' },
-          { id: 'orange', name: 'Orange', color: '#fdba74' },
-          { id: 'rose', name: 'Rose', color: '#f9a8d4' },
-          { id: 'verte', name: 'Verte', color: '#86efac' },
-          { id: 'bleue', name: 'Bleue', color: '#93c5fd' },
-          { id: 'violette', name: 'Violette', color: '#c084fc' },
-          { id: 'marron', name: 'Marron', color: '#a78bfa' },
-          { id: 'noire', name: 'Noire', color: '#404040' },
-          { id: 'etoilee1', name: 'Étoilée ★', color: '#ffd700', special: '⭐' },
+          { id: 'blanche',  name: 'Blanche',    color: '#ffffff', border: '#e5e7eb' },
+          { id: 'jaune',    name: 'Jaune',      color: '#fef08a' },
+          { id: 'orange',   name: 'Orange',     color: '#fdba74' },
+          { id: 'rose',     name: 'Rose',       color: '#f9a8d4' },
+          { id: 'verte',    name: 'Verte',      color: '#86efac' },
+          { id: 'bleue',    name: 'Bleue',      color: '#93c5fd' },
+          { id: 'violette', name: 'Violette',   color: '#c084fc' },
+          { id: 'marron',   name: 'Marron',     color: '#a78bfa' },
+          { id: 'noire',    name: 'Noire',      color: '#404040' },
+          { id: 'etoilee1', name: 'Étoilée ★',  color: '#ffd700', special: '⭐' },
           { id: 'etoilee2', name: 'Étoilée ★★', color: '#ffd700', special: '⭐⭐' },
-          { id: 'etoilee3', name: 'Étoilée ★★★', color: '#ffd700', special: '⭐⭐⭐' }
+          { id: 'etoilee3', name: 'Étoilée ★★★',color: '#ffd700', special: '⭐⭐⭐' }
         ];
 
-        // ===== COMPÉTENCES PAR MATIÈRE ET CEINTURE =====
         const COMPETENCES = {
           calcul: [
-            { belt: 0, desc: "Je pose et je calcule des additions." },
-            { belt: 1, desc: "Je pose et je calcule des soustractions." },
-            { belt: 2, desc: "Je pose et je calcule des multiplications à un chiffre. Je pose et je calcule des additions à trois termes." },
-            { belt: 3, desc: "Je pose et je calcule des multiplications à deux chiffres." },
-            { belt: 4, desc: "Je pose et je calcule des divisions (diviseur inférieur à 9). Je pose et je calcule des multiplications à 3 chiffres." },
-            { belt: 5, desc: "Je pose et je calcule des additions et des soustractions de nombres décimaux." },
-            { belt: 6, desc: "Je multiplie un nombre décimal par un nombre entier." },
-            { belt: 7, desc: "Je pose et je calcule des divisions pour obtenir un quotient décimal." },
-            { belt: 8, desc: "Je divise un nombre décimal par un nombre entier." },
-            { belt: 9, desc: "Je pose et je calcule des multiplications de deux nombres décimaux." },
+            { belt: 0,  desc: "Je pose et je calcule des additions." },
+            { belt: 1,  desc: "Je pose et je calcule des soustractions." },
+            { belt: 2,  desc: "Je pose et je calcule des multiplications à un chiffre. Je pose et je calcule des additions à trois termes." },
+            { belt: 3,  desc: "Je pose et je calcule des multiplications à deux chiffres." },
+            { belt: 4,  desc: "Je pose et je calcule des divisions (diviseur inférieur à 9). Je pose et je calcule des multiplications à 3 chiffres." },
+            { belt: 5,  desc: "Je pose et je calcule des additions et des soustractions de nombres décimaux." },
+            { belt: 6,  desc: "Je multiplie un nombre décimal par un nombre entier." },
+            { belt: 7,  desc: "Je pose et je calcule des divisions pour obtenir un quotient décimal." },
+            { belt: 8,  desc: "Je divise un nombre décimal par un nombre entier." },
+            { belt: 9,  desc: "Je pose et je calcule des multiplications de deux nombres décimaux." },
             { belt: 10, desc: "Je divise un nombre entier par un nombre supérieur à 10." },
             { belt: 11, desc: "Je calcule plus vite." },
           ],
           grammaire: [
-            { belt: 0, desc: "Je repère le ou les verbes conjugués dans une phrase. (Ne pas confondre avec les infinitifs ; temps composé = 2 mots ; plusieurs verbes possibles.)" },
-            { belt: 1, desc: "Je reconnais les pronoms personnels sujets (nature) et le sujet du verbe (fonction)." },
-            { belt: 2, desc: "Je reconnais les noms (propre/commun) et les déterminants (article défini, indéfini, possessif, démonstratif)." },
-            { belt: 3, desc: "Je reconnais les adjectifs. (L'adjectif va toujours avec un nom, il dit COMMENT est le nom.)" },
-            { belt: 4, desc: "Je reconnais le Groupe Verbal et les Compléments Circonstanciels (déplaçables et supprimables)." },
-            { belt: 5, desc: "Je reconnais le COD et le COI dans le Groupe Verbal. (COI commence par une préposition : à, de.)" },
-            { belt: 6, desc: "Je reconnais les compléments de nom (CdN). (Ne pas confondre avec le COI.)" },
-            { belt: 7, desc: "Je reconnais l'attribut du sujet (AdS). (Après un verbe d'état ; jamais de COD après un verbe d'état.)" },
-            { belt: 8, desc: "Je reconnais les adverbes. (Mots invariables, souvent supprimables : manière, temps, lieu, intensité.)", objectif: "fin CM2" },
-            { belt: 9, desc: "Je reconnais les prépositions. (Mots invariables : à, dans, par, pour, en, vers, avec, de, sans, sous…)" },
+            { belt: 0,  desc: "Je repère le ou les verbes conjugués dans une phrase. (Ne pas confondre avec les infinitifs ; temps composé = 2 mots ; plusieurs verbes possibles.)" },
+            { belt: 1,  desc: "Je reconnais les pronoms personnels sujets (nature) et le sujet du verbe (fonction)." },
+            { belt: 2,  desc: "Je reconnais les noms (propre/commun) et les déterminants (article défini, indéfini, possessif, démonstratif)." },
+            { belt: 3,  desc: "Je reconnais les adjectifs. (L'adjectif va toujours avec un nom, il dit COMMENT est le nom.)" },
+            { belt: 4,  desc: "Je reconnais le Groupe Verbal et les Compléments Circonstanciels (déplaçables et supprimables)." },
+            { belt: 5,  desc: "Je reconnais le COD et le COI dans le Groupe Verbal. (COI commence par une préposition : à, de.)" },
+            { belt: 6,  desc: "Je reconnais les compléments de nom (CdN). (Ne pas confondre avec le COI.)" },
+            { belt: 7,  desc: "Je reconnais l'attribut du sujet (AdS). (Après un verbe d'état ; jamais de COD après un verbe d'état.)" },
+            { belt: 8,  desc: "Je reconnais les adverbes. (Mots invariables, souvent supprimables : manière, temps, lieu, intensité.)", objectif: "fin CM2" },
+            { belt: 9,  desc: "Je reconnais les prépositions. (Mots invariables : à, dans, par, pour, en, vers, avec, de, sans, sous…)" },
             { belt: 10, desc: "Je reconnais le COD et COI pronominalisés, et les pronoms personnels compléments." },
             { belt: 11, desc: "Je reconnais les conjonctions de coordination. (mais, ou, et, or, ni, car)" },
           ],
           mesures: [
-            { belt: 0, desc: "Je sais mesurer un segment (cm/mm). Je connais les relations entre mm, cm, m et km. Je connais la relation entre heures et minutes. Je connais les mois de l'année." },
-            { belt: 1, desc: "Je compare, j'additionne et je soustrais des mesures de longueurs en unités différentes (mm, cm, m, km). Je connais les relations entre jours, heures, minutes et secondes." },
-            { belt: 2, desc: "Je calcule le périmètre d'une figure (carré, rectangle). Je trouve la longueur du côté d'un carré à partir de son périmètre." },
-            { belt: 3, desc: "Je comprends et j'utilise les longueurs exprimées avec deux unités (ex. 2 m 50 cm). Je connais les relations entre gramme, kilogramme et tonne.", objectif: "fin CM1" },
-            { belt: 4, desc: "Je connais toutes les unités usuelles (ajout de déca et hecto). Je sais tracer et utiliser un tableau de conversion pour les mètres, les litres et les grammes." },
-            { belt: 5, desc: "Je calcule l'aire d'un carré ou d'un rectangle (≠ périmètre). Je calcule une durée (heure de début → heure de fin) et l'heure de fin (début + durée)." },
-            { belt: 6, desc: "Je manipule les nombres décimaux pour mesurer ou convertir. Je trouve l'heure de début en connaissant la durée et l'heure de fin." },
-            { belt: 7, desc: "Je résous des problèmes de proportionnalité (nombres entiers)." },
-            { belt: 8, desc: "Je résous des problèmes de proportionnalité (nombres décimaux)." },
-            { belt: 9, desc: "Je calcule le périmètre du cercle." },
+            { belt: 0,  desc: "Je sais mesurer un segment (cm/mm). Je connais les relations entre mm, cm, m et km. Je connais la relation entre heures et minutes. Je connais les mois de l'année." },
+            { belt: 1,  desc: "Je compare, j'additionne et je soustrais des mesures de longueurs en unités différentes (mm, cm, m, km). Je connais les relations entre jours, heures, minutes et secondes." },
+            { belt: 2,  desc: "Je calcule le périmètre d'une figure (carré, rectangle). Je trouve la longueur du côté d'un carré à partir de son périmètre." },
+            { belt: 3,  desc: "Je comprends et j'utilise les longueurs exprimées avec deux unités (ex. 2 m 50 cm). Je connais les relations entre gramme, kilogramme et tonne.", objectif: "fin CM1" },
+            { belt: 4,  desc: "Je connais toutes les unités usuelles (ajout de déca et hecto). Je sais tracer et utiliser un tableau de conversion pour les mètres, les litres et les grammes." },
+            { belt: 5,  desc: "Je calcule l'aire d'un carré ou d'un rectangle (≠ périmètre). Je calcule une durée (heure de début → heure de fin) et l'heure de fin (début + durée)." },
+            { belt: 6,  desc: "Je manipule les nombres décimaux pour mesurer ou convertir. Je trouve l'heure de début en connaissant la durée et l'heure de fin." },
+            { belt: 7,  desc: "Je résous des problèmes de proportionnalité (nombres entiers)." },
+            { belt: 8,  desc: "Je résous des problèmes de proportionnalité (nombres décimaux)." },
+            { belt: 9,  desc: "Je calcule le périmètre du cercle." },
             { belt: 10, desc: "Je calcule l'aire du triangle et du cercle." },
             { belt: 11, desc: "Je résous des problèmes à plusieurs étapes faisant intervenir les unités de mesure." },
           ],
           homophones: [
-            { belt: 0, desc: "Choisir entre « et » et « est »." },
-            { belt: 1, desc: "Choisir entre « son » et « sont »." },
-            { belt: 2, desc: "Choisir entre « a » et « à »." },
-            { belt: 3, desc: "Choisir entre « on », « on n' » et « ont »." },
-            { belt: 4, desc: "Choisir entre « mes/mais/met/m'est » et entre « ou/où ».", objectif: "fin CM1" },
-            { belt: 5, desc: "Choisir entre « ses/ces/c'est/s'est » et entre « ce/se »." },
-            { belt: 6, desc: "Choisir entre les terminaisons -é, -er et -ait." },
-            { belt: 7, desc: "Choisir entre « la/là/l'a » et entre « dont/d'on/donc »." },
-            { belt: 8, desc: "Choisir entre « si/s'y », entre « ni/n'y », et entre « sans/s'en ».", objectif: "fin CM2" },
-            { belt: 9, desc: "Choisir entre « peu/peut/peux » et entre « qu'elle/quelle/quel »." },
+            { belt: 0,  desc: "Choisir entre « et » et « est »." },
+            { belt: 1,  desc: "Choisir entre « son » et « sont »." },
+            { belt: 2,  desc: "Choisir entre « a » et « à »." },
+            { belt: 3,  desc: "Choisir entre « on », « on n' » et « ont »." },
+            { belt: 4,  desc: "Choisir entre « mes/mais/met/m'est » et entre « ou/où ».", objectif: "fin CM1" },
+            { belt: 5,  desc: "Choisir entre « ses/ces/c'est/s'est » et entre « ce/se »." },
+            { belt: 6,  desc: "Choisir entre les terminaisons -é, -er et -ait." },
+            { belt: 7,  desc: "Choisir entre « la/là/l'a » et entre « dont/d'on/donc »." },
+            { belt: 8,  desc: "Choisir entre « si/s'y », entre « ni/n'y », et entre « sans/s'en ».", objectif: "fin CM2" },
+            { belt: 9,  desc: "Choisir entre « peu/peut/peux » et entre « qu'elle/quelle/quel »." },
             { belt: 10, desc: "Choisir entre « leur/leurs » et entre « tout/tous »." },
             { belt: 11, desc: "Choisir entre « qu'en/quand/quant »." },
           ],
           conjugaison: [
-            { belt: 0, desc: "Présent des verbes en -er + être et avoir. (Piège : verbes en -ger → nageons ; en -cer → lançons.)" },
-            { belt: 1, desc: "Imparfait des verbes réguliers + être et avoir. (Piège : double s avec son [s] : finissais.)" },
-            { belt: 2, desc: "Futur des verbes réguliers + être, avoir, aller, faire, dire, venir. (Pas de -s à la 1ʳᵉ personne.)" },
-            { belt: 3, desc: "Présent des verbes en -er, -ir, -re + être, avoir. (Repérer l'infinitif pour les bonnes terminaisons.)" },
-            { belt: 4, desc: "Passé composé avec auxiliaire avoir. (Le participe passé ne s'accorde pas avec le sujet.)", objectif: "fin CM1" },
-            { belt: 5, desc: "Imparfait et futur, y compris verbes en -ger, -cer, -ier. (Piège : jouerai, criions, lançais/lanciez.)" },
-            { belt: 6, desc: "Passé simple. (Astuce : conte — « il aperçut, il décida, il vit… »)" },
-            { belt: 7, desc: "Plus-que-parfait. (Temps composé ; avant une autre action passée ; participe passé invariable avec avoir.)" },
-            { belt: 8, desc: "Présent de tous les verbes courants : être, avoir, aller, faire, dire, venir, prendre, pouvoir, voir, vouloir.", objectif: "fin CM2" },
-            { belt: 9, desc: "Impératif et présent du conditionnel. (Pas de pronom à l'impératif ; ne pas confondre conditionnel et imparfait.)" },
+            { belt: 0,  desc: "Présent des verbes en -er + être et avoir. (Piège : verbes en -ger → nageons ; en -cer → lançons.)" },
+            { belt: 1,  desc: "Imparfait des verbes réguliers + être et avoir. (Piège : double s avec son [s] : finissais.)" },
+            { belt: 2,  desc: "Futur des verbes réguliers + être, avoir, aller, faire, dire, venir. (Pas de -s à la 1ʳᵉ personne.)" },
+            { belt: 3,  desc: "Présent des verbes en -er, -ir, -re + être, avoir. (Repérer l'infinitif pour les bonnes terminaisons.)" },
+            { belt: 4,  desc: "Passé composé avec auxiliaire avoir. (Le participe passé ne s'accorde pas avec le sujet.)", objectif: "fin CM1" },
+            { belt: 5,  desc: "Imparfait et futur, y compris verbes en -ger, -cer, -ier. (Piège : jouerai, criions, lançais/lanciez.)" },
+            { belt: 6,  desc: "Passé simple. (Astuce : conte — « il aperçut, il décida, il vit… »)" },
+            { belt: 7,  desc: "Plus-que-parfait. (Temps composé ; avant une autre action passée ; participe passé invariable avec avoir.)" },
+            { belt: 8,  desc: "Présent de tous les verbes courants : être, avoir, aller, faire, dire, venir, prendre, pouvoir, voir, vouloir.", objectif: "fin CM2" },
+            { belt: 9,  desc: "Impératif et présent du conditionnel. (Pas de pronom à l'impératif ; ne pas confondre conditionnel et imparfait.)" },
             { belt: 10, desc: "Temps composés avec auxiliaires être et avoir." },
             { belt: 11, desc: "Révision de tous les temps étudiés." },
           ],
         };
 
         const STUDENT_PASSWORDS = {
-          'Adèle': '2112', 'Antoine': '0810', 'Arthur': '2107', 'Candice': '1402',
-          'Clarisse': '1011', 'Clémence': '0710', 'Constance': '2601', 'Elena': '0705',
-          'Eustache': '2408', 'Flor': '1809', 'Gabriel': '1407', 'Hélie': '1905',
-          'Kévin': '1234', 'Léonie': '2609', 'Lise': '1412', 'Madeleine': '1011',
-          'Maëlys': '2907', 'Malo': '0101', 'Maxence': '2509', 'Morgane': '1711',
-          'Noah': '2712', 'Oscar': '1305', 'Paul': '2712', 'Quentin': '1406',
-          'Raphaël': '1802', 'Simon': '2501', 'Tessa': '0701', 'Thibault': '2005',
-          'Timothée': '2503', 'Tomas': '2302'
+          'Adèle':'2112','Antoine':'0810','Arthur':'2107','Candice':'1402',
+          'Clarisse':'1011','Clémence':'0710','Constance':'2601','Elena':'0705',
+          'Eustache':'2408','Flor':'1809','Gabriel':'1407','Hélie':'1905',
+          'Kévin':'1234','Léonie':'2609','Lise':'1412','Madeleine':'1011',
+          'Maëlys':'2907','Malo':'0101','Maxence':'2509','Morgane':'1711',
+          'Noah':'2712','Oscar':'1305','Paul':'2712','Quentin':'1406',
+          'Raphaël':'1802','Simon':'2501','Tessa':'0701','Thibault':'2005',
+          'Timothée':'2503','Tomas':'2302'
         };
 
         const DEMO_STUDENTS = [
-          { name: 'Adèle', gender: 'F' }, { name: 'Antoine', gender: 'M' },
-          { name: 'Arthur', gender: 'M' }, { name: 'Candice', gender: 'F' },
-          { name: 'Clarisse', gender: 'F' }, { name: 'Clémence', gender: 'F' },
-          { name: 'Constance', gender: 'F' }, { name: 'Elena', gender: 'F' },
-          { name: 'Eustache', gender: 'M' }, { name: 'Flor', gender: 'F' },
-          { name: 'Gabriel', gender: 'M' }, { name: 'Hélie', gender: 'M' },
-          { name: 'Kévin', gender: 'M' }, { name: 'Léonie', gender: 'F' },
-          { name: 'Lise', gender: 'F' }, { name: 'Madeleine', gender: 'F' },
-          { name: 'Maëlys', gender: 'F' }, { name: 'Malo', gender: 'M' },
-          { name: 'Maxence', gender: 'M' }, { name: 'Morgane', gender: 'F' },
-          { name: 'Noah', gender: 'M' }, { name: 'Oscar', gender: 'M' },
-          { name: 'Paul', gender: 'M' }, { name: 'Quentin', gender: 'M' },
-          { name: 'Raphaël', gender: 'M' }, { name: 'Simon', gender: 'M' },
-          { name: 'Tessa', gender: 'F' }, { name: 'Thibault', gender: 'M' },
-          { name: 'Timothée', gender: 'M' }, { name: 'Tomas', gender: 'M' }
+          {name:'Adèle',gender:'F'},{name:'Antoine',gender:'M'},{name:'Arthur',gender:'M'},
+          {name:'Candice',gender:'F'},{name:'Clarisse',gender:'F'},{name:'Clémence',gender:'F'},
+          {name:'Constance',gender:'F'},{name:'Elena',gender:'F'},{name:'Eustache',gender:'M'},
+          {name:'Flor',gender:'F'},{name:'Gabriel',gender:'M'},{name:'Hélie',gender:'M'},
+          {name:'Kévin',gender:'M'},{name:'Léonie',gender:'F'},{name:'Lise',gender:'F'},
+          {name:'Madeleine',gender:'F'},{name:'Maëlys',gender:'F'},{name:'Malo',gender:'M'},
+          {name:'Maxence',gender:'M'},{name:'Morgane',gender:'F'},{name:'Noah',gender:'M'},
+          {name:'Oscar',gender:'M'},{name:'Paul',gender:'M'},{name:'Quentin',gender:'M'},
+          {name:'Raphaël',gender:'M'},{name:'Simon',gender:'M'},{name:'Tessa',gender:'F'},
+          {name:'Thibault',gender:'M'},{name:'Timothée',gender:'M'},{name:'Tomas',gender:'M'}
         ];
 
-        const apiGet = async (action) => {
-          const response = await fetch(`${SCRIPT_URL}?action=${action}`);
-          return await response.json();
+        // ── Helpers difficulté ──
+        const getFailedTestsForCurrentBelt = (data) => {
+          if (!data || !data.failedTests) return 0;
+          return data.failedTests.filter(f => f.beltIndex === data.currentBelt).length;
+        };
+        const getTrainingErrorRate = (trainings) => {
+          if (!trainings || trainings.length === 0) return null;
+          return Math.round((trainings.filter(t => t.errors >= 2).length / trainings.length) * 100);
+        };
+        const getDifficultyLevel = (data) => {
+          const fails = getFailedTestsForCurrentBelt(data);
+          const errRate = getTrainingErrorRate(data?.trainings);
+          if (fails >= 2) return 'danger';
+          if (fails === 1 || (errRate !== null && errRate >= 50)) return 'warning';
+          return null;
         };
 
-        const apiPost = async (data) => {
-          const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify(data)
+        const apiGet = async (action) => { const r = await fetch(`${SCRIPT_URL}?action=${action}`); return r.json(); };
+        const apiPost = async (data) => { const r = await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(data)}); return r.json(); };
+
+        const Card = ({children,className='',style={},onClick}) => (
+          <div className={'card '+className} style={style} onClick={onClick}>{children}</div>
+        );
+        const CardContent = ({children,className='',style={}}) => (
+          <div className={className} style={{padding:'1.5rem',...style}}>{children}</div>
+        );
+        const Button = ({children,onClick,variant='default',size,className='',style={},disabled,type}) => {
+          const vc = variant==='outline'?'btn-outline':'btn-default';
+          const sc = size==='sm'?'btn-sm':'';
+          return <button onClick={onClick} disabled={disabled} type={type} className={vc+' '+sc+' '+className} style={style}>{children}</button>;
+        };
+
+        // ── Panneau difficultés ──
+        const DifficultyPanel = ({ studentData, students, selectedSubject, onManage }) => {
+          const items = [];
+          students.forEach(stu => {
+            SUBJECTS.filter(s => !selectedSubject || s.id === selectedSubject).forEach(sub => {
+              const d = studentData[stu.name]?.[sub.id];
+              if (!d) return;
+              const level = getDifficultyLevel(d);
+              if (!level) return;
+              items.push({ student:stu.name, gender:stu.gender, subject:sub, data:d, level,
+                fails:getFailedTestsForCurrentBelt(d), errRate:getTrainingErrorRate(d.trainings) });
+            });
           });
-          return await response.json();
+          if (items.length === 0) return null;
+          const dangers  = items.filter(i => i.level==='danger');
+          const warnings = items.filter(i => i.level==='warning');
+          return (
+            <div className="difficulty-section">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold" style={{color:'#991b1b'}}>🚨 Élèves en difficulté ({items.length})</h2>
+                <span className="text-sm" style={{color:'#6b7280'}}>Seuil : ≥ 2 échecs au même test</span>
+              </div>
+              {dangers.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-sm font-semibold mb-2" style={{color:'#991b1b'}}>Alerte rouge — ≥ 2 échecs :</p>
+                  {dangers.map((item,i) => (
+                    <div key={i} className="difficulty-item cursor-pointer" onClick={()=>onManage(item.student,item.subject.id)}>
+                      <div className="flex items-center gap-3">
+                        <span style={{fontSize:'1.5rem'}}>{item.gender==='F'?'👧':'👦'}</span>
+                        <div>
+                          <span className="font-bold">{item.student}</span>
+                          <span className="text-sm ml-2" style={{color:item.subject.color}}>• {item.subject.name}</span>
+                          <div className="text-xs" style={{color:'#6b7280',marginTop:'0.15rem'}}>Bloqué·e sur la ceinture {BELTS[item.data.currentBelt]?.name}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="difficulty-flag flag-red">🚨 {item.fails} échecs au test</div>
+                        {item.errRate!==null&&item.errRate>=50&&<div style={{fontSize:'0.7rem',color:'#9ca3af',marginTop:'0.2rem'}}>{item.errRate}% erreurs entr.</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {warnings.length > 0 && (
+                <div>
+                  <p className="text-sm font-semibold mb-2" style={{color:'#92400e'}}>Avertissement — 1 échec ou entraînements difficiles :</p>
+                  {warnings.map((item,i) => (
+                    <div key={i} className="difficulty-item warning cursor-pointer" onClick={()=>onManage(item.student,item.subject.id)}>
+                      <div className="flex items-center gap-3">
+                        <span style={{fontSize:'1.5rem'}}>{item.gender==='F'?'👧':'👦'}</span>
+                        <div>
+                          <span className="font-bold">{item.student}</span>
+                          <span className="text-sm ml-2" style={{color:item.subject.color}}>• {item.subject.name}</span>
+                          <div className="text-xs" style={{color:'#6b7280',marginTop:'0.15rem'}}>Ceinture {BELTS[item.data.currentBelt]?.name}</div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        {item.fails>0&&<span className="difficulty-flag flag-orange">⚠️ {item.fails} échec au test</span>}
+                        {item.errRate!==null&&item.errRate>=50&&<span className="difficulty-flag flag-orange">📉 {item.errRate}% erreurs</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
         };
 
-        const Card = ({ children, className = '', style = {}, onClick }) => (
-            <div className={'card ' + className} style={style} onClick={onClick}>{children}</div>
-        );
-        const CardContent = ({ children, className = '', style = {} }) => (
-            <div className={className} style={{padding: '1.5rem', ...style}}>{children}</div>
-        );
-        const Button = ({ children, onClick, variant = 'default', size, className = '', style = {}, disabled, type }) => {
-            const variantClass = variant === 'outline' ? 'btn-outline' : 'btn-default';
-            const sizeClass = size === 'sm' ? 'btn-sm' : '';
-            return (
-                <button onClick={onClick} disabled={disabled} type={type}
-                        className={variantClass + ' ' + sizeClass + ' ' + className} style={style}>
-                    {children}
-                </button>
-            );
-        };
-
-        // ===== COMPOSANT LIVRET DE COMPÉTENCES =====
-        const LivretCompetences = ({ student, data, onBack, isTeacher = false }) => {
+        // ── Livret de compétences ──
+        const LivretCompetences = ({ student, data, onBack }) => {
           const [selectedSubject, setSelectedSubject] = useState(null);
           const studentInfo = DEMO_STUDENTS.find(s => s.name === student);
 
           const getSubjectProgress = (subjectId) => {
             const d = data?.[subjectId];
-            if (!d) return { validated: 0, total: BELTS.length };
-            return { validated: d.currentBelt, total: BELTS.length };
+            return { validated: d?.currentBelt || 0, total: BELTS.length };
           };
 
+          // currentBelt = dernière ceinture ACQUISE (ex: 3 = rose acquise)
+          // beltIndex <= currentBelt  → déjà validée ✅
+          // beltIndex === currentBelt+1 → ceinture CIBLE en cours 🎯
+          // beltIndex > currentBelt+1  → pas encore atteinte 🔒
           const getBeltStatus = (subjectId, beltIndex) => {
             const d = data?.[subjectId];
             if (!d) return 'locked';
-            if (beltIndex < d.currentBelt) return 'validated';
-            if (beltIndex === d.currentBelt) return 'current';
+            if (beltIndex <= d.currentBelt) return 'validated';
+            if (beltIndex === d.currentBelt + 1) return 'current';
             return 'locked';
           };
 
           const getValidatedDate = (subjectId, beltIndex) => {
             const d = data?.[subjectId];
-            if (!d || !d.history) return null;
+            if (!d?.history) return null;
             const entry = d.history.find(h => h.beltIndex === beltIndex + 1);
-            if (!entry) return null;
-            return new Date(entry.date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+            return entry ? new Date(entry.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : null;
           };
 
-          const totalValidated = SUBJECTS.reduce((sum, s) => sum + (data?.[s.id]?.currentBelt || 0), 0);
-          const totalPossible = SUBJECTS.length * BELTS.length;
+          const totalValidated = SUBJECTS.reduce((sum,s) => sum + (data?.[s.id]?.currentBelt||0), 0);
+          const totalPossible  = SUBJECTS.length * BELTS.length;
 
           return (
             <div className="min-h-screen bg-gradient p-4">
-              <div style={{maxWidth: '72rem', margin: '0 auto'}}>
-                {/* Header */}
+              <div style={{maxWidth:'72rem',margin:'0 auto'}}>
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h1 className="text-3xl font-bold text-purple-900">
-                      {studentInfo?.gender === 'F' ? '👧' : '👦'} Livret de {student}
+                      {studentInfo?.gender==='F'?'👧':'👦'} Livret de {student}
                     </h1>
                     <p className="text-gray-500 text-sm mt-1">
-                      {totalValidated} ceinture{totalValidated > 1 ? 's' : ''} validée{totalValidated > 1 ? 's' : ''} sur {totalPossible} possibles
+                      {totalValidated} ceinture{totalValidated>1?'s':''} validée{totalValidated>1?'s':''} sur {totalPossible} possibles
                     </p>
                   </div>
                   <Button onClick={onBack} variant="outline">← Retour</Button>
                 </div>
 
-                {/* Barre de progression globale */}
                 <Card className="mb-6">
-                  <CardContent style={{padding: '1rem 1.5rem'}}>
+                  <CardContent style={{padding:'1rem 1.5rem'}}>
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-semibold text-gray-700">Progression globale</span>
-                      <span className="font-bold text-purple-900">{Math.round(totalValidated / totalPossible * 100)}%</span>
+                      <span className="font-bold text-purple-900">{Math.round(totalValidated/totalPossible*100)}%</span>
                     </div>
                     <div className="progress-bar-livret">
                       <div className="progress-bar-livret-fill"
-                           style={{width: `${totalValidated / totalPossible * 100}%`, background: 'linear-gradient(to right, #8b5cf6, #ec4899)'}} />
+                           style={{width:`${totalValidated/totalPossible*100}%`,background:'linear-gradient(to right,#8b5cf6,#ec4899)'}} />
                     </div>
                     <div className="flex flex-wrap gap-3 mt-3">
                       {SUBJECTS.map(s => {
                         const prog = getSubjectProgress(s.id);
                         return (
-                          <div key={s.id} className="flex items-center gap-1 text-xs text-gray-600"
-                               style={{cursor: 'pointer'}} onClick={() => setSelectedSubject(selectedSubject === s.id ? null : s.id)}>
-                            <div style={{width: 8, height: 8, borderRadius: '50%', backgroundColor: s.color}} />
-                            <span style={{color: s.color, fontWeight: 600}}>{s.name}</span>
+                          <div key={s.id} className="flex items-center gap-1 text-xs text-gray-600 cursor-pointer"
+                               onClick={()=>setSelectedSubject(selectedSubject===s.id?null:s.id)}>
+                            <div style={{width:8,height:8,borderRadius:'50%',backgroundColor:s.color}} />
+                            <span style={{color:s.color,fontWeight:600}}>{s.name}</span>
                             <span>{prog.validated}/{prog.total}</span>
                           </div>
                         );
@@ -445,86 +463,71 @@
                   </CardContent>
                 </Card>
 
-                {/* Filtre matières */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  <Button onClick={() => setSelectedSubject(null)}
-                          variant={!selectedSubject ? "default" : "outline"}
-                          size="sm">Toutes les matières</Button>
+                  <Button onClick={()=>setSelectedSubject(null)} variant={!selectedSubject?'default':'outline'} size="sm">Toutes les matières</Button>
                   {SUBJECTS.map(s => (
                     <Button key={s.id} size="sm"
-                            onClick={() => setSelectedSubject(selectedSubject === s.id ? null : s.id)}
-                            variant={selectedSubject === s.id ? "default" : "outline"}
-                            style={selectedSubject === s.id ? {backgroundColor: s.color, color: 'white'} : {}}>
+                            onClick={()=>setSelectedSubject(selectedSubject===s.id?null:s.id)}
+                            variant={selectedSubject===s.id?'default':'outline'}
+                            style={selectedSubject===s.id?{backgroundColor:s.color,color:'white'}:{}}>
                       {s.name}
                     </Button>
                   ))}
                 </div>
 
-                {/* Cards par matière */}
-                {SUBJECTS.filter(s => !selectedSubject || s.id === selectedSubject).map(subject => {
-                  const comps = COMPETENCES[subject.id] || [];
-                  const prog = getSubjectProgress(subject.id);
-                  
+                {SUBJECTS.filter(s=>!selectedSubject||s.id===selectedSubject).map(subject => {
+                  const comps = COMPETENCES[subject.id]||[];
+                  const prog  = getSubjectProgress(subject.id);
+                  // ceinture obtenue = BELTS[currentBelt - 1], ceinture cible = BELTS[currentBelt]
+                  const obtainedBelt = prog.validated > 0 ? BELTS[prog.validated] : null;
+                  const targetBelt   = BELTS[prog.validated + 1];
                   return (
                     <div key={subject.id} className="subject-livret-card mb-6">
-                      {/* Header matière */}
-                      <div className="subject-livret-header" style={{background: `linear-gradient(135deg, ${subject.color}dd, ${subject.color}99)`}}>
+                      <div className="subject-livret-header" style={{background:`linear-gradient(135deg,${subject.color}dd,${subject.color}99)`}}>
                         <div>
                           <h2 className="text-xl font-bold">{subject.name}</h2>
-                          <p style={{fontSize: '0.85rem', opacity: 0.9}}>
-                            {prog.validated} ceinture{prog.validated > 1 ? 's' : ''} validée{prog.validated > 1 ? 's' : ''} · 
-                            Ceinture actuelle : <strong>{BELTS[prog.validated]?.name || 'Toutes validées !'}</strong>
+                          <p style={{fontSize:'0.85rem',opacity:0.9}}>
+                            {prog.validated === 0
+                              ? <>Aucune ceinture validée · Cible : <strong>Blanche</strong></>
+                              : !targetBelt
+                                ? <><strong>Toutes les ceintures validées 🏆</strong></>
+                                : <>Ceinture obtenue : <strong>{obtainedBelt.name}</strong> · Cible : <strong>{targetBelt.name}</strong></>
+                            }
                           </p>
                         </div>
-                        <div style={{textAlign: 'right'}}>
-                          <div style={{fontSize: '2rem', fontWeight: 800}}>{prog.validated}/{prog.total}</div>
-                          <div className="progress-bar-livret" style={{width: '80px', marginLeft: 'auto'}}>
-                            <div className="progress-bar-livret-fill"
-                                 style={{width: `${prog.validated / prog.total * 100}%`, backgroundColor: 'white'}} />
+                        <div style={{textAlign:'right'}}>
+                          <div style={{fontSize:'2rem',fontWeight:800}}>{prog.validated}/{prog.total}</div>
+                          <div className="progress-bar-livret" style={{width:'80px',marginLeft:'auto'}}>
+                            <div className="progress-bar-livret-fill" style={{width:`${prog.validated/prog.total*100}%`,backgroundColor:'white'}} />
                           </div>
                         </div>
                       </div>
-
-                      {/* Ceintures */}
                       <div className="subject-livret-body">
-                        {comps.map((comp, idx) => {
+                        {comps.map((comp,idx) => {
                           const belt = BELTS[comp.belt];
                           if (!belt) return null;
-                          const status = getBeltStatus(subject.id, comp.belt);
+                          const status    = getBeltStatus(subject.id, comp.belt);
                           const validDate = getValidatedDate(subject.id, comp.belt);
-
                           return (
                             <div key={idx} className={`livret-belt-row ${status}`}>
-                              {/* Badge couleur */}
                               <div className="livret-belt-badge"
-                                   style={{
-                                     backgroundColor: belt.color,
-                                     border: belt.border ? `2px solid ${belt.border}` : `2px solid ${belt.color}cc`,
-                                     color: belt.id === 'noire' ? 'white' : '#1f2937',
-                                     opacity: status === 'locked' ? 0.5 : 1
-                                   }}>
-                                {belt.special || belt.name.charAt(0).toUpperCase()}
+                                   style={{backgroundColor:belt.color,
+                                     border:belt.border?`2px solid ${belt.border}`:`2px solid ${belt.color}cc`,
+                                     color:belt.id==='noire'?'white':'#1f2937',opacity:status==='locked'?.5:1}}>
+                                {belt.special||belt.name.charAt(0).toUpperCase()}
                               </div>
-
-                              {/* Texte compétence */}
                               <div className="livret-competence-text">
-                                <div className="belt-name" style={{color: status === 'locked' ? '#9ca3af' : subject.color}}>
+                                <div className="belt-name" style={{color:status==='locked'?'#9ca3af':subject.color}}>
                                   Ceinture {belt.name}
-                                  {comp.objectif && <span className="objective-tag">Objectif {comp.objectif}</span>}
+                                  {comp.objectif&&<span className="objective-tag">Objectif {comp.objectif}</span>}
                                 </div>
-                                <div className="belt-desc" style={{color: status === 'locked' ? '#d1d5db' : '#4b5563'}}>
-                                  {comp.desc}
-                                </div>
-                                {validDate && (
-                                  <div className="livret-validated-date">✓ Validée le {validDate}</div>
-                                )}
+                                <div className="belt-desc" style={{color:status==='locked'?'#d1d5db':'#4b5563'}}>{comp.desc}</div>
+                                {validDate&&<div className="livret-validated-date">✓ Validée le {validDate}</div>}
                               </div>
-
-                              {/* Icône statut */}
                               <div className="livret-status-icon">
-                                {status === 'validated' && <span title="Validée">✅</span>}
-                                {status === 'current' && <span title="En cours">🎯</span>}
-                                {status === 'locked' && <span title="Non atteinte" style={{opacity:0.3}}>🔒</span>}
+                                {status==='validated'&&<span title="Validée">✅</span>}
+                                {status==='current'&&<span title="Cible en cours">🎯</span>}
+                                {status==='locked'&&<span title="Non atteinte" style={{opacity:.3}}>🔒</span>}
                               </div>
                             </div>
                           );
@@ -538,59 +541,151 @@
           );
         };
 
-        // ===== VUE SÉLECTION ÉLÈVE POUR LIVRET (enseignant) =====
-        const LivretStudentSelector = ({ students, studentData, onSelectStudent, onBack }) => {
-          return (
-            <div className="min-h-screen bg-gradient-purple p-4">
-              <div style={{maxWidth: '72rem', margin: '0 auto'}}>
-                <div className="flex items-center justify-between mb-8">
-                  <h1 className="text-3xl font-bold text-purple-900">📊 Progressions de compétences</h1>
-                  <Button onClick={onBack} variant="outline">← Retour</Button>
-                </div>
-                <p className="text-gray-600 mb-6">Sélectionne un élève pour voir son progression détaillée.</p>
-                <div className="student-selector-grid">
-                  {[...students].sort((a, b) => a.name.localeCompare(b.name)).map((student, idx) => {
-                    const data = studentData[student.name];
-                    const totalValidated = data ? SUBJECTS.reduce((sum, s) => sum + (data[s.id]?.currentBelt || 0), 0) : 0;
-                    const totalPossible = SUBJECTS.length * BELTS.length;
-                    const pct = Math.round(totalValidated / totalPossible * 100);
-                    
-                    return (
-                      <div key={idx} className="student-selector-card" onClick={() => onSelectStudent(student.name)}>
-                        <div style={{fontSize: '2.5rem', marginBottom: '0.5rem'}}>
-                          {student.gender === 'F' ? '👧' : '👦'}
-                        </div>
-                        <p className="font-semibold" style={{marginBottom: '0.5rem'}}>{student.name}</p>
-                        <div style={{fontSize: '0.75rem', color: '#6b7280', marginBottom: '0.4rem'}}>
-                          {totalValidated} / {totalPossible} ceintures
-                        </div>
-                        <div className="progress-bar-livret">
-                          <div className="progress-bar-livret-fill"
-                               style={{width: `${pct}%`, background: 'linear-gradient(to right, #8b5cf6, #ec4899)'}} />
-                        </div>
-                        <div style={{fontSize: '0.7rem', color: '#8b5cf6', fontWeight: 600, marginTop: '0.3rem'}}>{pct}%</div>
+        // ── Sélecteur élève pour le livret ──
+        const LivretStudentSelector = ({ students, studentData, onSelectStudent, onBack }) => (
+          <div className="min-h-screen bg-gradient-purple p-4">
+            <div style={{maxWidth:'72rem',margin:'0 auto'}}>
+              <div className="flex items-center justify-between mb-8">
+                <h1 className="text-3xl font-bold text-purple-900">📊 Progressions de compétences</h1>
+                <Button onClick={onBack} variant="outline">← Retour</Button>
+              </div>
+              <p className="text-gray-600 mb-6">Sélectionne un élève pour voir son progression détaillée.</p>
+              <div className="student-selector-grid">
+                {[...students].sort((a,b)=>a.name.localeCompare(b.name)).map((student,idx) => {
+                  const data = studentData[student.name];
+                  const totalValidated = data ? SUBJECTS.reduce((sum,s)=>sum+(data[s.id]?.currentBelt||0),0) : 0;
+                  const totalPossible  = SUBJECTS.length * BELTS.length;
+                  const pct = Math.round(totalValidated/totalPossible*100);
+                  return (
+                    <div key={idx} className="student-selector-card" onClick={()=>onSelectStudent(student.name)}>
+                      <div style={{fontSize:'2.5rem',marginBottom:'0.5rem'}}>{student.gender==='F'?'👧':'👦'}</div>
+                      <p className="font-semibold" style={{marginBottom:'0.5rem'}}>{student.name}</p>
+                      <div style={{fontSize:'0.75rem',color:'#6b7280',marginBottom:'0.4rem'}}>{totalValidated}/{totalPossible} ceintures</div>
+                      <div className="progress-bar-livret">
+                        <div className="progress-bar-livret-fill" style={{width:`${pct}%`,background:'linear-gradient(to right,#8b5cf6,#ec4899)'}} />
                       </div>
-                    );
-                  })}
-                </div>
+                      <div style={{fontSize:'0.7rem',color:'#8b5cf6',fontWeight:600,marginTop:'0.3rem'}}>{pct}%</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+
+        // ── Vue par élève : prochaines ceintures ──
+        const StudentNextBeltsView = ({ students, studentData, selectedSubject, isStudentReady, getSuccessRate, onManage }) => {
+          const [search, setSearch] = useState('');
+
+          const getStudentNextBelts = (studentName) => {
+            const data = studentData[studentName];
+            if (!data) return [];
+            return SUBJECTS
+              .filter(s => !selectedSubject || s.id === selectedSubject)
+              .map(sub => {
+                const d = data[sub.id];
+                if (!d) return null;
+                const nextBelt = BELTS[d.currentBelt];
+                if (!nextBelt) return null;
+                const ready = isStudentReady(d.trainings);
+                const rate  = getSuccessRate(d.trainings);
+                const diff  = getDifficultyLevel(d);
+                const fails = getFailedTestsForCurrentBelt(d);
+                return { subject:sub, currentBelt:d.currentBelt, nextBelt, ready, rate, trainings:d.trainings.length, diff, fails };
+              })
+              .filter(Boolean);
+          };
+
+          const filtered = [...students]
+            .sort((a,b) => a.name.localeCompare(b.name))
+            .filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+
+          return (
+            <div>
+              <div style={{marginBottom:'1rem',maxWidth:'280px'}}>
+                <input type="text" placeholder="🔍 Chercher un élève…" value={search}
+                  onChange={e=>setSearch(e.target.value)}
+                  style={{padding:'0.4rem 0.75rem',fontSize:'0.875rem'}}/>
+              </div>
+              <div className="student-next-grid">
+                {filtered.map((stu, idx) => {
+                  const nextBelts = getStudentNextBelts(stu.name);
+                  const totalDone = SUBJECTS.reduce((acc,s) => acc+(studentData[stu.name]?.[s.id]?.currentBelt||0), 0);
+                  const totalPoss = SUBJECTS.length * BELTS.length;
+                  const pct       = Math.round(totalDone/totalPoss*100);
+                  const hasDanger = nextBelts.some(b=>b.diff==='danger');
+                  const hasWarn   = nextBelts.some(b=>b.diff==='warning');
+                  const hasReady  = nextBelts.some(b=>b.ready);
+                  return (
+                    <div key={idx} className="student-next-card"
+                         style={{border:hasDanger?'2px solid #fca5a5':hasWarn?'2px solid #fdba74':'2px solid transparent'}}>
+                      <div className="student-next-card-header" style={{background:'#f9fafb',borderBottom:'1px solid #f3f4f6'}}>
+                        <div className="flex items-center gap-2">
+                          <span style={{fontSize:'1.6rem'}}>{stu.gender==='F'?'👧':'👦'}</span>
+                          <div>
+                            <div className="font-bold" style={{fontSize:'0.95rem'}}>{stu.name}</div>
+                            <div style={{fontSize:'0.7rem',color:'#6b7280'}}>{totalDone}/{totalPoss} ceintures · {pct}%</div>
+                          </div>
+                        </div>
+                        <div className="flex gap-1" style={{alignItems:'center'}}>
+                          {hasDanger&&<span className="difficulty-flag flag-red">🚨</span>}
+                          {!hasDanger&&hasWarn&&<span className="difficulty-flag flag-orange">⚠️</span>}
+                          {hasReady&&<span style={{fontSize:'0.7rem',background:'#dcfce7',color:'#166534',border:'1px solid #86efac',borderRadius:'0.25rem',padding:'0.1rem 0.35rem',fontWeight:700}}>🎯 Prêt·e</span>}
+                        </div>
+                      </div>
+                      <div style={{height:'4px',background:'#e5e7eb'}}>
+                        <div style={{height:'100%',width:`${pct}%`,background:'linear-gradient(to right,#8b5cf6,#ec4899)',transition:'width 0.5s'}}/>
+                      </div>
+                      <div className="student-next-card-body">
+                        {nextBelts.length === 0
+                          ? <p style={{fontSize:'0.75rem',color:'#9ca3af',fontStyle:'italic'}}>Toutes les ceintures validées 🏆</p>
+                          : nextBelts.map((item,i) => (
+                          <div key={i} className="next-belt-row cursor-pointer" onClick={()=>onManage(stu.name,item.subject.id)}>
+                            <div className="next-belt-dot"
+                                 style={{backgroundColor:item.nextBelt.color,
+                                   border:item.nextBelt.border?`1.5px solid ${item.nextBelt.border}`:`1.5px solid ${item.nextBelt.color}cc`,
+                                   color:item.nextBelt.id==='noire'?'white':'#333'}}>
+                              {item.nextBelt.special||item.nextBelt.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="next-belt-subject" style={{color:item.subject.color}}>{item.subject.name}</div>
+                            <div className="next-belt-name">→ {item.nextBelt.name}</div>
+                            <div className="next-belt-status">
+                              {item.diff==='danger'&&<span className="difficulty-flag flag-red" style={{fontSize:'0.6rem'}}>🚨×{item.fails}</span>}
+                              {item.diff==='warning'&&!item.ready&&<span className="difficulty-flag flag-orange" style={{fontSize:'0.6rem'}}>⚠️</span>}
+                              {item.ready
+                                ? <span style={{color:'#16a34a',fontWeight:700,fontSize:'0.75rem'}}>🎯</span>
+                                : item.trainings>0
+                                  ? <span style={{color:Math.round(item.rate*100)>=70?'#16a34a':'#6b7280',fontSize:'0.7rem'}}>
+                                      {item.trainings}·{Math.round(item.rate*100)}%
+                                    </span>
+                                  : <span style={{color:'#d1d5db',fontSize:'0.7rem'}}>—</span>
+                              }
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           );
         };
 
-        // ===== APPLICATION PRINCIPALE =====
+        // ────────────────────────────────────────────────
+        //  APP PRINCIPALE
+        // ────────────────────────────────────────────────
         const CeinturesApp = () => {
-          const [view, setView] = useState('login');
-          const [currentStudent, setCurrentStudent] = useState(null);
-          const [studentData, setStudentData] = useState({});
-          const [students, setStudents] = useState([]);
-          const [loading, setLoading] = useState(true);
-          const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState(false);
-          const [teacherPassword, setTeacherPassword] = useState('');
-          const [selectedStudentForLogin, setSelectedStudentForLogin] = useState(null);
-          const [studentPassword, setStudentPassword] = useState('');
-          const [livretStudent, setLivretStudent] = useState(null); // pour le livret
-          
+          const [view, setView]                             = useState('login');
+          const [currentStudent, setCurrentStudent]         = useState(null);
+          const [studentData, setStudentData]               = useState({});
+          const [students, setStudents]                     = useState([]);
+          const [loading, setLoading]                       = useState(true);
+          const [isTeacherAuthenticated, setIsTeacherAuth]  = useState(false);
+          const [teacherPassword, setTeacherPassword]       = useState('');
+          const [selectedStudentForLogin, setStudentLogin]  = useState(null);
+          const [studentPassword, setStudentPassword]       = useState('');
+          const [livretStudent, setLivretStudent]           = useState(null);
           const TEACHER_PASSWORD = '191090';
 
           useEffect(() => { loadData(); }, []);
@@ -598,544 +693,475 @@
           const loadData = async () => {
             setLoading(true);
             try {
-              const studentsResult = await apiGet('getStudents');
-              if (studentsResult.students && studentsResult.students.length > 0) {
-                setStudents(studentsResult.students);
-              } else {
+              const sr = await apiGet('getStudents');
+              if (sr.students?.length > 0) { setStudents(sr.students); }
+              else {
                 setStudents(DEMO_STUDENTS);
-                for (const student of DEMO_STUDENTS) {
-                  await apiPost({ action: 'addStudent', name: student.name, gender: student.gender });
-                }
-                await apiPost({ action: 'initializeData', students: DEMO_STUDENTS, subjects: SUBJECTS });
+                for (const s of DEMO_STUDENTS) await apiPost({action:'addStudent',name:s.name,gender:s.gender});
+                await apiPost({action:'initializeData',students:DEMO_STUDENTS,subjects:SUBJECTS});
               }
-              const dataResult = await apiGet('getData');
-              if (dataResult.data && Object.keys(dataResult.data).length > 0) {
-                setStudentData(dataResult.data);
-              } else {
-                const initialData = {};
-                DEMO_STUDENTS.forEach(student => {
-                  initialData[student.name] = {};
-                  SUBJECTS.forEach(subject => {
-                    initialData[student.name][subject.id] = { currentBelt: 0, trainings: [], history: [] };
-                  });
+              const dr = await apiGet('getData');
+              if (dr.data && Object.keys(dr.data).length > 0) {
+                const migrated = {};
+                Object.entries(dr.data).forEach(([name,subs]) => {
+                  migrated[name] = {};
+                  Object.entries(subs).forEach(([subId,d]) => { migrated[name][subId] = {failedTests:[],...d}; });
                 });
-                setStudentData(initialData);
+                setStudentData(migrated);
+              } else {
+                const init = {};
+                DEMO_STUDENTS.forEach(s => {
+                  init[s.name] = {};
+                  SUBJECTS.forEach(sub => { init[s.name][sub.id] = {currentBelt:0,trainings:[],history:[],failedTests:[]}; });
+                });
+                setStudentData(init);
               }
-            } catch (error) {
-              console.error('Erreur chargement:', error);
-              alert('Erreur de chargement. Vérifiez votre connexion internet.');
-            }
+            } catch(e) { console.error(e); alert('Erreur de chargement. Vérifiez votre connexion internet.'); }
             setLoading(false);
           };
 
-          const saveStudentData = async (studentName, subjectId, newData) => {
-            await apiPost({ action: 'saveStudentData', student: studentName, subject: subjectId, subjectData: newData });
-            const updatedData = { ...studentData };
-            if (!updatedData[studentName]) updatedData[studentName] = {};
-            updatedData[studentName][subjectId] = newData;
-            setStudentData(updatedData);
+          const saveStudentData = async (studentName,subjectId,newData) => {
+            await apiPost({action:'saveStudentData',student:studentName,subject:subjectId,subjectData:newData});
+            setStudentData(prev => ({...prev,[studentName]:{...prev[studentName],[subjectId]:newData}}));
           };
 
-          const addStudent = async (name, gender) => {
-            await apiPost({ action: 'addStudent', name, gender });
-            for (const subject of SUBJECTS) {
-              await apiPost({ action: 'saveStudentData', student: name, subject: subject.id,
-                              subjectData: { currentBelt: 0, trainings: [], history: [] } });
-            }
+          const addStudent = async (name,gender) => {
+            await apiPost({action:'addStudent',name,gender});
+            for (const s of SUBJECTS) await apiPost({action:'saveStudentData',student:name,subject:s.id,
+              subjectData:{currentBelt:0,trainings:[],history:[],failedTests:[]}});
             await loadData();
           };
+          const removeStudent = async (name) => { await apiPost({action:'removeStudent',name}); await loadData(); };
 
-          const removeStudent = async (name) => {
-            await apiPost({ action: 'removeStudent', name });
-            await loadData();
+          const isStudentReady   = (t) => t.length>=6 && t.filter(x=>x.errors<=1).length/t.length>=0.7;
+          const getSuccessRate   = (t) => t.length===0 ? 0 : t.filter(x=>x.errors<=1).length/t.length;
+          const getProgressForGauge = (t) => {
+            const tp = Math.min(t.length/6,1);
+            const sc = t.filter(x=>x.errors<=1).length;
+            const rp = t.length>0?(sc/t.length)/0.7:0;
+            return (tp+Math.min(rp,1))/2;
           };
 
-          const isStudentReady = (trainings) => {
-            if (trainings.length < 6) return false;
-            return trainings.filter(t => t.errors <= 1).length / trainings.length >= 0.7;
+          const addTraining = async (student,subject,errors) => {
+            const cur = studentData[student]?.[subject]||{currentBelt:0,trainings:[],history:[],failedTests:[]};
+            await saveStudentData(student,subject,{...cur,trainings:[...cur.trainings,{errors,date:Date.now()}]});
           };
 
-          const getSuccessRate = (trainings) => {
-            if (trainings.length === 0) return 0;
-            return trainings.filter(t => t.errors <= 1).length / trainings.length;
-          };
-
-          const getProgressForGauge = (trainings) => {
-            const trainingProgress = Math.min(trainings.length / 6, 1);
-            const successCount = trainings.filter(t => t.errors <= 1).length;
-            const rateProgress = trainings.length > 0 ? (successCount / trainings.length) / 0.7 : 0;
-            return (trainingProgress + Math.min(rateProgress, 1)) / 2;
-          };
-
-          const addTraining = async (student, subject, errors) => {
-            const currentData = studentData[student]?.[subject] || { currentBelt: 0, trainings: [], history: [] };
-            await saveStudentData(student, subject, { ...currentData, trainings: [...currentData.trainings, { errors, date: Date.now() }] });
-          };
-
-          const validateBelt = async (student, subject) => {
-            const currentData = studentData[student][subject];
-            const currentBeltIndex = currentData.currentBelt;
-            await saveStudentData(student, subject, {
-              ...currentData,
-              currentBelt: currentBeltIndex + 1,
-              trainings: [],
-              history: [...(currentData.history || []),
-                { beltIndex: currentBeltIndex + 1, beltName: BELTS[currentBeltIndex + 1]?.name || '', date: Date.now() }]
+          const validateBelt = async (student,subject) => {
+            const cur = studentData[student][subject];
+            const idx = cur.currentBelt;
+            await saveStudentData(student,subject,{
+              ...cur, currentBelt:idx+1, trainings:[],
+              history:[...(cur.history||[]),{beltIndex:idx+1,beltName:BELTS[idx+1]?.name||'',date:Date.now()}]
             });
           };
 
-          const setBeltLevel = async (student, subject, beltIndex) => {
-            const currentData = studentData[student][subject];
-            await saveStudentData(student, subject, { ...currentData, currentBelt: beltIndex, trainings: [] });
+          const rejectTest = async (student,subject) => {
+            const cur = studentData[student][subject];
+            await saveStudentData(student,subject,{
+              ...cur, trainings:[],
+              failedTests:[...(cur.failedTests||[]),{beltIndex:cur.currentBelt,date:Date.now()}]
+            });
           };
 
-          const rejectTest = async (student, subject) => {
-            const currentData = studentData[student][subject];
-            await saveStudentData(student, subject, { ...currentData, trainings: [] });
+          const setBeltLevel = async (student,subject,beltIndex) => {
+            const cur = studentData[student][subject];
+            await saveStudentData(student,subject,{...cur,currentBelt:beltIndex,trainings:[]});
           };
 
-          if (loading) {
-            return (
-              <div className="min-h-screen bg-gradient p-4 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">⏳</div>
-                  <p className="text-xl text-purple-900">Chargement depuis Google Sheets...</p>
-                </div>
-              </div>
-            );
+          const resetDifficultyFlags = async (student,subject) => {
+            const cur = studentData[student][subject];
+            await saveStudentData(student,subject,{...cur,failedTests:[]});
+          };
+
+          if (loading) return (
+            <div className="min-h-screen bg-gradient p-4 flex items-center justify-center">
+              <div className="text-center"><div className="text-6xl mb-4">⏳</div>
+                <p className="text-xl text-purple-900">Chargement depuis Google Sheets...</p></div>
+            </div>
+          );
+
+          if (view==='teacher-progression') {
+            if (!livretStudent) return <LivretStudentSelector students={students} studentData={studentData}
+              onSelectStudent={name=>setLivretStudent(name)} onBack={()=>{setView('teacher');setLivretStudent(null);}}/>;
+            return <LivretCompetences student={livretStudent} data={studentData[livretStudent]}
+              onBack={()=>setLivretStudent(null)}/>;
           }
 
-          // ===== VUE LIVRET DEPUIS ENSEIGNANT =====
-          if (view === 'teacher-progression') {
-            if (!livretStudent) {
-              return <LivretStudentSelector
-                students={students}
-                studentData={studentData}
-                onSelectStudent={(name) => setLivretStudent(name)}
-                onBack={() => { setView('teacher'); setLivretStudent(null); }}
-              />;
-            }
-            return <LivretCompetences
-              student={livretStudent}
-              data={studentData[livretStudent]}
-              isTeacher={true}
-              onBack={() => setLivretStudent(null)}
-            />;
-          }
+          if (view==='student-progression' && currentStudent)
+            return <LivretCompetences student={currentStudent} data={studentData[currentStudent]}
+              onBack={()=>setView('student')}/>;
 
-          // ===== VUE LIVRET DEPUIS ÉLÈVE =====
-          if (view === 'student-progression' && currentStudent) {
-            return <LivretCompetences
-              student={currentStudent}
-              data={studentData[currentStudent]}
-              onBack={() => setView('student')}
-            />;
-          }
-
-          if (view === 'login') {
-            return (
-              <div className="min-h-screen bg-gradient p-4">
-                <div className="max-w-4xl">
-                  <h1 className="text-4xl font-bold text-center mb-8 text-purple-900">Ceintures de compétences CM1</h1>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => setView('student')}>
-                      <CardContent className="text-center p-8">
-                        <div className="text-6xl mb-4">🎓</div>
-                        <h2 className="text-2xl font-bold text-blue-900">Élève</h2>
-                        <p className="text-gray-600 mt-2">Enregistrer mes entraînements</p>
-                      </CardContent>
-                    </Card>
-                    <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={() => setView('teacher-login')}>
-                      <CardContent className="text-center p-8">
-                        <div className="text-6xl mb-4">👩‍🏫</div>
-                        <h2 className="text-2xl font-bold text-purple-900">Enseignante</h2>
-                        <p className="text-gray-600 mt-2">Tableau de bord</p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            );
-          }
-
-          if (view === 'teacher-login') {
-            return (
-              <div className="min-h-screen bg-gradient-purple p-4">
-                <div className="max-w-4xl">
-                  <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold text-purple-900">Connexion enseignante</h1>
-                    <Button onClick={() => setView('login')} variant="outline">Retour</Button>
-                  </div>
-                  <Card>
-                    <CardContent className="p-8">
-                      <div className="text-center mb-6">
-                        <div className="text-6xl mb-4">🔐</div>
-                        <h2 className="text-xl font-semibold mb-2">Mot de passe requis</h2>
-                        <p className="text-gray-600 text-sm">Entrez le mot de passe pour accéder au tableau de bord</p>
-                      </div>
-                      <form onSubmit={(e) => {
-                        e.preventDefault();
-                        if (teacherPassword === TEACHER_PASSWORD) {
-                          setIsTeacherAuthenticated(true);
-                          setView('teacher');
-                          setTeacherPassword('');
-                        } else {
-                          alert('❌ Mot de passe incorrect');
-                          setTeacherPassword('');
-                        }
-                      }}>
-                        <div className="mb-4">
-                          <label className="block text-sm font-semibold mb-2">Mot de passe</label>
-                          <input type="password" value={teacherPassword}
-                                 onChange={(e) => setTeacherPassword(e.target.value)}
-                                 placeholder="Entrez le mot de passe" autoFocus className="text-lg" />
-                        </div>
-                        <Button type="submit" className="w-full"
-                                style={{backgroundColor: '#6366f1', color: 'white', padding: '0.75rem'}}>
-                          Se connecter
-                        </Button>
-                      </form>
+          if (view==='login') return (
+            <div className="min-h-screen bg-gradient p-4">
+              <div className="max-w-4xl">
+                <h1 className="text-4xl font-bold text-center mb-8 text-purple-900">Ceintures de compétences CM1</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={()=>setView('student')}>
+                    <CardContent className="text-center p-8">
+                      <div className="text-6xl mb-4">🎓</div>
+                      <h2 className="text-2xl font-bold text-blue-900">Élève</h2>
+                      <p className="text-gray-600 mt-2">Enregistrer mes entraînements</p>
+                    </CardContent>
+                  </Card>
+                  <Card className="cursor-pointer hover:shadow-lg transition-all" onClick={()=>setView('teacher-login')}>
+                    <CardContent className="text-center p-8">
+                      <div className="text-6xl mb-4">👩‍🏫</div>
+                      <h2 className="text-2xl font-bold text-purple-900">Enseignante</h2>
+                      <p className="text-gray-600 mt-2">Tableau de bord</p>
                     </CardContent>
                   </Card>
                 </div>
               </div>
-            );
-          }
+            </div>
+          );
 
-          if (view === 'student' && !currentStudent) {
-            if (!selectedStudentForLogin) {
-              return (
-                <div className="min-h-screen bg-gradient p-4">
-                  <div className="max-w-4xl">
-                    <div className="flex items-center justify-between mb-8">
-                      <h1 className="text-3xl font-bold text-purple-900">Qui es-tu ?</h1>
-                      <Button onClick={() => setView('login')} variant="outline">Retour</Button>
+          if (view==='teacher-login') return (
+            <div className="min-h-screen bg-gradient-purple p-4">
+              <div className="max-w-4xl">
+                <div className="flex items-center justify-between mb-8">
+                  <h1 className="text-3xl font-bold text-purple-900">Connexion enseignante</h1>
+                  <Button onClick={()=>setView('login')} variant="outline">Retour</Button>
+                </div>
+                <Card><CardContent className="p-8">
+                  <div className="text-center mb-6"><div className="text-6xl mb-4">🔐</div>
+                    <h2 className="text-xl font-semibold mb-2">Mot de passe requis</h2></div>
+                  <form onSubmit={e=>{e.preventDefault();
+                    if(teacherPassword===TEACHER_PASSWORD){setIsTeacherAuth(true);setView('teacher');setTeacherPassword('');}
+                    else{alert('❌ Mot de passe incorrect');setTeacherPassword('');}
+                  }}>
+                    <div className="mb-4">
+                      <label className="block text-sm font-semibold mb-2">Mot de passe</label>
+                      <input type="password" value={teacherPassword} onChange={e=>setTeacherPassword(e.target.value)}
+                        placeholder="Entrez le mot de passe" autoFocus className="text-lg"/>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                      {[...students].sort((a, b) => a.name.localeCompare(b.name)).map((student, idx) => (
-                        <Card key={idx} className="cursor-pointer hover:shadow-lg transition-all"
-                              onClick={() => setSelectedStudentForLogin(student.name)}>
-                          <CardContent className="text-center p-6">
-                            <div className="text-4xl mb-2">{student.gender === 'F' ? '👧' : '👦'}</div>
-                            <p className="font-semibold text-lg">{student.name}</p>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
+                    <Button type="submit" className="w-full" style={{backgroundColor:'#6366f1',color:'white',padding:'0.75rem'}}>Se connecter</Button>
+                  </form>
+                </CardContent></Card>
+              </div>
+            </div>
+          );
+
+          if (view==='student' && !currentStudent) {
+            if (!selectedStudentForLogin) return (
+              <div className="min-h-screen bg-gradient p-4">
+                <div className="max-w-4xl">
+                  <div className="flex items-center justify-between mb-8">
+                    <h1 className="text-3xl font-bold text-purple-900">Qui es-tu ?</h1>
+                    <Button onClick={()=>setView('login')} variant="outline">Retour</Button>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {[...students].sort((a,b)=>a.name.localeCompare(b.name)).map((s,i) => (
+                      <Card key={i} className="cursor-pointer hover:shadow-lg transition-all" onClick={()=>setStudentLogin(s.name)}>
+                        <CardContent className="text-center p-6">
+                          <div className="text-4xl mb-2">{s.gender==='F'?'👧':'👦'}</div>
+                          <p className="font-semibold text-lg">{s.name}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
                 </div>
-              );
-            }
+              </div>
+            );
             return (
               <div className="min-h-screen bg-gradient p-4">
                 <div className="max-w-4xl">
                   <div className="flex items-center justify-between mb-8">
                     <h1 className="text-3xl font-bold text-purple-900">Connexion</h1>
-                    <Button onClick={() => { setSelectedStudentForLogin(null); setStudentPassword(''); }} variant="outline">Retour</Button>
+                    <Button onClick={()=>{setStudentLogin(null);setStudentPassword('');}} variant="outline">Retour</Button>
                   </div>
-                  <Card>
-                    <CardContent className="p-8">
-                      <div className="text-center mb-6">
-                        <div className="text-6xl mb-4">
-                          {students.find(s => s.name === selectedStudentForLogin)?.gender === 'F' ? '👧' : '👦'}
-                        </div>
-                        <h2 className="text-2xl font-bold mb-2">{selectedStudentForLogin}</h2>
-                        <p className="text-gray-600 text-sm">Entre ton code secret</p>
+                  <Card><CardContent className="p-8">
+                    <div className="text-center mb-6">
+                      <div className="text-6xl mb-4">{students.find(s=>s.name===selectedStudentForLogin)?.gender==='F'?'👧':'👦'}</div>
+                      <h2 className="text-2xl font-bold mb-2">{selectedStudentForLogin}</h2>
+                      <p className="text-gray-600 text-sm">Entre ton code secret</p>
+                    </div>
+                    <form onSubmit={e=>{e.preventDefault();
+                      if(studentPassword===STUDENT_PASSWORDS[selectedStudentForLogin]){
+                        setCurrentStudent(selectedStudentForLogin);setStudentLogin(null);setStudentPassword('');
+                      } else{alert('❌ Code incorrect !');setStudentPassword('');}
+                    }}>
+                      <div className="mb-4">
+                        <label className="block text-sm font-semibold mb-2">Ton code secret (4 chiffres)</label>
+                        <input type="password" value={studentPassword} onChange={e=>setStudentPassword(e.target.value)}
+                          placeholder="****" maxLength="4" pattern="[0-9]*" inputMode="numeric" autoFocus
+                          className="text-lg text-center" style={{fontSize:'2rem',letterSpacing:'0.5rem'}}/>
                       </div>
-                      <form onSubmit={(e) => {
-                        e.preventDefault();
-                        if (studentPassword === STUDENT_PASSWORDS[selectedStudentForLogin]) {
-                          setCurrentStudent(selectedStudentForLogin);
-                          setSelectedStudentForLogin(null);
-                          setStudentPassword('');
-                        } else {
-                          alert('❌ Code incorrect ! Vérifie ton code.');
-                          setStudentPassword('');
-                        }
-                      }}>
-                        <div className="mb-4">
-                          <label className="block text-sm font-semibold mb-2">Ton code secret (4 chiffres)</label>
-                          <input type="password" value={studentPassword}
-                                 onChange={(e) => setStudentPassword(e.target.value)}
-                                 placeholder="****" maxLength="4" pattern="[0-9]*" inputMode="numeric" autoFocus
-                                 className="text-lg text-center" style={{fontSize: '2rem', letterSpacing: '0.5rem'}} />
-                        </div>
-                        <Button type="submit" className="w-full" disabled={studentPassword.length !== 4}
-                                style={{backgroundColor: '#6366f1', color: 'white', padding: '0.75rem'}}>
-                          Se connecter
-                        </Button>
-                      </form>
-                    </CardContent>
-                  </Card>
+                      <Button type="submit" className="w-full" disabled={studentPassword.length!==4}
+                        style={{backgroundColor:'#6366f1',color:'white',padding:'0.75rem'}}>Se connecter</Button>
+                    </form>
+                  </CardContent></Card>
                 </div>
               </div>
             );
           }
 
-          if (view === 'student' && currentStudent) {
-            return <StudentView
-              student={currentStudent}
-              data={studentData[currentStudent]}
-              onBack={() => { setCurrentStudent(null); setSelectedStudentForLogin(null); setStudentPassword(''); }}
-              onAddTraining={addTraining}
-              isStudentReady={isStudentReady}
+          if (view==='student' && currentStudent)
+            return <StudentView student={currentStudent} data={studentData[currentStudent]}
+              onBack={()=>{setCurrentStudent(null);setStudentLogin(null);setStudentPassword('');}}
+              onAddTraining={addTraining} isStudentReady={isStudentReady}
               getProgressForGauge={getProgressForGauge}
-              onOpenProgression={() => setView('student-progression')}
-            />;
-          }
+              onOpenProgression={()=>setView('student-progression')}/>;
 
-          if (view === 'teacher') {
+          if (view==='teacher') {
             if (!isTeacherAuthenticated) { setView('teacher-login'); return null; }
-            return <TeacherDashboard
-              studentData={studentData}
-              students={students}
-              onBack={() => { setView('login'); setIsTeacherAuthenticated(false); }}
-              isStudentReady={isStudentReady}
-              getSuccessRate={getSuccessRate}
-              onValidateBelt={validateBelt}
-              onRejectTest={rejectTest}
-              onSetBeltLevel={setBeltLevel}
-              onAddStudent={addStudent}
-              onRemoveStudent={removeStudent}
-              onReload={loadData}
-              onOpenProgression={() => { setLivretStudent(null); setView('teacher-progression'); }}
-            />;
+            return <TeacherDashboard studentData={studentData} students={students}
+              onBack={()=>{setView('login');setIsTeacherAuth(false);}}
+              isStudentReady={isStudentReady} getSuccessRate={getSuccessRate}
+              onValidateBelt={validateBelt} onRejectTest={rejectTest}
+              onSetBeltLevel={setBeltLevel} onAddStudent={addStudent}
+              onRemoveStudent={removeStudent} onReload={loadData}
+              onResetDifficulty={resetDifficultyFlags}
+              onOpenProgression={()=>{setLivretStudent(null);setView('teacher-progression');}}/>;
           }
         };
 
-        // ===== STUDENT VIEW (inchangée + bouton livret) =====
+        // ────────────────────────────────────────────────
+        //  VUE ÉLÈVE (inchangée)
+        // ────────────────────────────────────────────────
         const StudentView = ({ student, data, onBack, onAddTraining, isStudentReady, getProgressForGauge, onOpenProgression }) => {
           const [selectedSubject, setSelectedSubject] = useState(null);
           if (!data) return null;
 
-          if (!selectedSubject) {
-            return (
-              <div className="min-h-screen bg-gradient p-4">
-                <div className="max-w-4xl">
-                  <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold text-purple-900">Bonjour {student} !</h1>
-                    <div className="flex gap-2">
-                      <Button onClick={onOpenProgression} variant="outline" style={{borderColor: '#8b5cf6', color: '#8b5cf6'}}>
-                        📊 Ma progression
-                      </Button>
-                      <Button onClick={onBack} variant="outline">Changer d'élève</Button>
-                    </div>
-                  </div>
-                  <h2 className="text-xl font-semibold mb-4 text-gray-700">Choisis une matière :</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {SUBJECTS.map(subject => {
-                      const subjectData = data[subject.id];
-                      if (!subjectData) return null;
-                      const currentBelt = BELTS[subjectData.currentBelt];
-                      const progress = getProgressForGauge(subjectData.trainings);
-                      const ready = isStudentReady(subjectData.trainings);
-                      return (
-                        <Card key={subject.id} className="cursor-pointer hover:shadow-xl transition-all hover:scale-105"
-                              style={{ borderTop: `6px solid ${subject.color}` }}
-                              onClick={() => setSelectedSubject(subject)}>
-                          <CardContent className="p-6">
-                            <h3 className="text-2xl font-bold mb-3" style={{ color: subject.color }}>{subject.name}</h3>
-                            <div className="flex items-center gap-3 mb-3">
-                              <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
-                                   style={{ backgroundColor: currentBelt.color,
-                                     border: currentBelt.border ? `2px solid ${currentBelt.border}` : 'none',
-                                     color: currentBelt.id === 'noire' ? 'white' : 'black' }}>
-                                {currentBelt.special || ''}
-                              </div>
-                              <div>
-                                <p className="font-semibold text-lg">Ceinture {currentBelt.name}</p>
-                                <p className="text-sm text-gray-600">
-                                  {BELTS[subjectData.currentBelt + 1] ?
-                                    `Tu t'entraînes pour la ${BELTS[subjectData.currentBelt + 1].name}` :
-                                    'Niveau maximum atteint !'}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden mt-3">
-                              <div className="h-full transition-all duration-500 rounded-full"
-                                   style={{ width: `${progress * 100}%`, backgroundColor: ready ? '#22c55e' : subject.color }}>
-                              </div>
-                            </div>
-                            {ready && <p className="text-sm text-center mt-2 font-semibold text-green-600">🎉 Tu es prêt !</p>}
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
+          if (!selectedSubject) return (
+            <div className="min-h-screen bg-gradient p-4">
+              <div className="max-w-4xl">
+                <div className="flex items-center justify-between mb-8">
+                  <h1 className="text-3xl font-bold text-purple-900">Bonjour {student} !</h1>
+                  <div className="flex gap-2">
+                    <Button onClick={onOpenProgression} variant="outline" style={{borderColor:'#8b5cf6',color:'#8b5cf6'}}>
+                      📊 Ma progression
+                    </Button>
+                    <Button onClick={onBack} variant="outline">Changer d'élève</Button>
                   </div>
                 </div>
+                <h2 className="text-xl font-semibold mb-4 text-gray-700">Choisis une matière :</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {SUBJECTS.map(sub => {
+                    const sd = data[sub.id]; if(!sd) return null;
+                    const belt = BELTS[sd.currentBelt];
+                    const progress = getProgressForGauge(sd.trainings);
+                    const ready = isStudentReady(sd.trainings);
+                    return (
+                      <Card key={sub.id} className="cursor-pointer hover:shadow-xl transition-all hover:scale-105"
+                            style={{borderTop:`6px solid ${sub.color}`}} onClick={()=>setSelectedSubject(sub)}>
+                        <CardContent className="p-6">
+                          <h3 className="text-2xl font-bold mb-3" style={{color:sub.color}}>{sub.name}</h3>
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
+                                 style={{backgroundColor:belt.color,border:belt.border?`2px solid ${belt.border}`:'none',color:belt.id==='noire'?'white':'black'}}>
+                              {belt.special||''}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-lg">Ceinture {belt.name}</p>
+                              <p className="text-sm text-gray-600">
+                                {BELTS[sd.currentBelt+1]?`Tu t'entraînes pour la ${BELTS[sd.currentBelt+1].name}`:'Niveau maximum atteint !'}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden mt-3">
+                            <div className="h-full transition-all duration-500 rounded-full"
+                                 style={{width:`${progress*100}%`,backgroundColor:ready?'#22c55e':sub.color}}/>
+                          </div>
+                          {ready&&<p className="text-sm text-center mt-2 font-semibold text-green-600">🎉 Tu es prêt·e !</p>}
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
               </div>
-            );
-          }
+            </div>
+          );
 
-          const subjectData = data[selectedSubject.id];
-          const currentBelt = BELTS[subjectData.currentBelt];
-          const progress = getProgressForGauge(subjectData.trainings);
-          const ready = isStudentReady(subjectData.trainings);
+          const sd = data[selectedSubject.id];
+          const belt = BELTS[sd.currentBelt];
+          const progress = getProgressForGauge(sd.trainings);
+          const ready = isStudentReady(sd.trainings);
 
           return (
             <div className="min-h-screen bg-gradient p-4">
               <div className="max-w-4xl">
                 <div className="flex items-center justify-between mb-8">
-                  <h1 className="text-3xl font-bold" style={{ color: selectedSubject.color }}>{selectedSubject.name}</h1>
-                  <Button onClick={() => setSelectedSubject(null)} variant="outline">Retour aux matières</Button>
+                  <h1 className="text-3xl font-bold" style={{color:selectedSubject.color}}>{selectedSubject.name}</h1>
+                  <Button onClick={()=>setSelectedSubject(null)} variant="outline">Retour aux matières</Button>
                 </div>
-                <Card className="mb-6" style={{ borderTop: `6px solid ${selectedSubject.color}` }}>
+                <Card className="mb-6" style={{borderTop:`6px solid ${selectedSubject.color}`}}>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4 mb-6">
                       <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold"
-                           style={{ backgroundColor: currentBelt.color,
-                             border: currentBelt.border ? `3px solid ${currentBelt.border}` : 'none',
-                             color: currentBelt.id === 'noire' ? 'white' : 'black' }}>
-                        {currentBelt.special || ''}
+                           style={{backgroundColor:belt.color,border:belt.border?`3px solid ${belt.border}`:'none',color:belt.id==='noire'?'white':'black'}}>
+                        {belt.special||''}
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">
-                          {BELTS[subjectData.currentBelt + 1] ? `Tu as la ceinture ${currentBelt.name}` : `Bravo ! Tu es au niveau maximum`}
-                        </p>
+                        <p className="text-sm text-gray-600">{BELTS[sd.currentBelt+1]?`Tu as la ceinture ${belt.name}`:'Bravo ! Niveau maximum'}</p>
                         <h2 className="text-2xl font-bold">
-                          {BELTS[subjectData.currentBelt + 1] ?
-                            `Tu t'entraînes pour passer la ${BELTS[subjectData.currentBelt + 1].name}` :
-                            `Ceinture ${currentBelt.name}`}
+                          {BELTS[sd.currentBelt+1]?`Tu t'entraînes pour passer la ${BELTS[sd.currentBelt+1].name}`:`Ceinture ${belt.name}`}
                         </h2>
                       </div>
                     </div>
                     <div className="mb-6">
                       <div className="w-full h-12 bg-gray-200 rounded-full overflow-hidden mb-3">
                         <div className="h-full transition-all duration-500 rounded-full flex items-center justify-center"
-                             style={{ width: `${progress * 100}%`, backgroundColor: ready ? '#22c55e' : selectedSubject.color }}>
-                          {progress > 0.3 && <span className="text-white font-bold">{ready ? '🎉' : ''}</span>}
+                             style={{width:`${progress*100}%`,backgroundColor:ready?'#22c55e':selectedSubject.color}}>
+                          {progress>0.3&&<span className="text-white font-bold">{ready?'🎉':''}</span>}
                         </div>
                       </div>
                       <p className="text-center text-lg font-semibold">
-                        {ready ?
-                          <span className="text-green-600">🎉 Tu es prêt ! Ta maîtresse va te proposer le test.</span> :
-                          <span className="text-gray-600">Continue tes entraînements !</span>}
+                        {ready?<span className="text-green-600">🎉 Tu es prêt·e ! Ta maîtresse va te proposer le test.</span>
+                              :<span className="text-gray-600">Continue tes entraînements !</span>}
                       </p>
                     </div>
                     <p className="text-center text-base font-semibold text-gray-700 mb-4">Combien d'erreurs as-tu faites ?</p>
                     <div className="grid grid-cols-3 gap-3">
-                      <Button className="h-32 text-lg font-bold flex flex-col gap-2 text-white"
-                              style={{ backgroundColor: '#22c55e' }}
-                              onClick={() => onAddTraining(student, selectedSubject.id, 0)}>
-                        <span className="text-base font-bold">Tout juste</span><span className="text-4xl">✅</span>
-                      </Button>
-                      <Button className="h-32 text-lg font-bold flex flex-col gap-2 text-white"
-                              style={{ backgroundColor: '#3b82f6' }}
-                              onClick={() => onAddTraining(student, selectedSubject.id, 1)}>
-                        <span className="text-base font-bold">1 erreur</span><span className="text-4xl">✅</span>
-                      </Button>
-                      <Button className="h-32 text-lg font-bold flex flex-col gap-2 text-white"
-                              style={{ backgroundColor: '#ef4444' }}
-                              onClick={() => onAddTraining(student, selectedSubject.id, 2)}>
-                        <span className="text-base font-bold">2 erreurs<br/>ou plus</span><span className="text-4xl">❌</span>
-                      </Button>
+                      {[{label:'Tout juste',sub:'',errors:0,color:'#22c55e',icon:'✅'},
+                        {label:'1 erreur', sub:'',errors:1,color:'#3b82f6',icon:'✅'},
+                        {label:'2 erreurs',sub:'ou plus',errors:2,color:'#ef4444',icon:'❌'}
+                      ].map(btn => (
+                        <Button key={btn.errors} className="h-32 text-lg font-bold flex flex-col gap-2 text-white"
+                                style={{backgroundColor:btn.color}} onClick={()=>onAddTraining(student,selectedSubject.id,btn.errors)}>
+                          <span className="text-base font-bold">{btn.label}{btn.sub&&<><br/>{btn.sub}</>}</span>
+                          <span className="text-4xl">{btn.icon}</span>
+                        </Button>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
-                {subjectData.trainings.length > 0 && (
-                  <Card>
-                    <CardContent className="p-6">
-                      <h3 className="font-bold text-lg mb-4">Mes derniers entraînements :</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {subjectData.trainings.slice(-15).reverse().map((training, idx) => {
-                          const bgColor = training.errors === 0 ? '#22c55e' : training.errors === 1 ? '#3b82f6' : '#ef4444';
-                          return (
-                            <div key={idx} className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
-                                 style={{ backgroundColor: bgColor, opacity: idx > 8 ? 0.5 : 1, color: 'white' }}>
-                              {training.errors === 0 ? '0' : training.errors === 1 ? '1' : '2+'}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </CardContent>
-                  </Card>
+                {sd.trainings.length>0&&(
+                  <Card><CardContent className="p-6">
+                    <h3 className="font-bold text-lg mb-4">Mes derniers entraînements :</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {sd.trainings.slice(-15).reverse().map((t,i) => {
+                        const bg = t.errors===0?'#22c55e':t.errors===1?'#3b82f6':'#ef4444';
+                        return <div key={i} className="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold"
+                                    style={{backgroundColor:bg,opacity:i>8?.5:1,color:'white'}}>
+                          {t.errors===0?'0':t.errors===1?'1':'2+'}
+                        </div>;
+                      })}
+                    </div>
+                  </CardContent></Card>
                 )}
               </div>
             </div>
           );
         };
 
-        // ===== TEACHER DASHBOARD (inchangé + bouton livret) =====
+        // ────────────────────────────────────────────────
+        //  TABLEAU DE BORD ENSEIGNANTE (inchangé)
+        // ────────────────────────────────────────────────
         const TeacherDashboard = ({ studentData, students, onBack, isStudentReady, getSuccessRate,
-                                    onValidateBelt, onRejectTest, onSetBeltLevel, onAddStudent, onRemoveStudent,
-                                    onReload, onOpenProgression }) => {
-          const [selectedSubject, setSelectedSubject] = useState(null);
-          const [showManagement, setShowManagement] = useState(false);
-          const [showBeltManager, setShowBeltManager] = useState(null);
-          const [newName, setNewName] = useState('');
-          const [newGender, setNewGender] = useState('F');
-          const [selectedForValidation, setSelectedForValidation] = useState([]);
+                                    onValidateBelt, onRejectTest, onSetBeltLevel,
+                                    onAddStudent, onRemoveStudent, onReload,
+                                    onResetDifficulty, onOpenProgression }) => {
+          const [selectedSubject, setSelectedSubject]   = useState(null);
+          const [showManagement, setShowManagement]     = useState(false);
+          const [showBeltManager, setShowBeltManager]   = useState(null);
+          const [newName, setNewName]                   = useState('');
+          const [newGender, setNewGender]               = useState('F');
+          const [selectedForValidation, setSelected]    = useState([]);
+          const [dashboardView, setDashboardView]       = useState('classe');
 
           const getReadyStudents = () => {
             const result = [];
-            Object.entries(studentData).forEach(([name, subjects]) => {
-              Object.entries(subjects).forEach(([subId, data]) => {
-                if (isStudentReady(data.trainings)) {
-                  const sub = SUBJECTS.find(s => s.id === subId);
-                  if (sub) result.push({
-                    student: name, subject: sub.name, subjectId: subId, subjectColor: sub.color,
-                    belt: BELTS[data.currentBelt].name, nextBelt: BELTS[data.currentBelt + 1]?.name || 'Max',
-                    trainingsCount: data.trainings.length, successRate: Math.round(getSuccessRate(data.trainings) * 100)
-                  });
+            Object.entries(studentData).forEach(([name,subs]) => {
+              Object.entries(subs).forEach(([subId,d]) => {
+                if (isStudentReady(d.trainings)) {
+                  const sub = SUBJECTS.find(s=>s.id===subId);
+                  if (sub) result.push({student:name,subject:sub.name,subjectId:subId,subjectColor:sub.color,
+                    belt:BELTS[d.currentBelt].name,nextBelt:BELTS[d.currentBelt+1]?.name||'Max',
+                    trainingsCount:d.trainings.length,successRate:Math.round(getSuccessRate(d.trainings)*100),data:d});
                 }
               });
             });
             return result;
           };
-
           const ready = getReadyStudents();
-
-          const toggleSelection = (student, subjectId) => {
-            const key = `${student}-${subjectId}`;
-            setSelectedForValidation(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+          const toggleSel = (student,subjectId) => {
+            const key=`${student}-${subjectId}`;
+            setSelected(prev=>prev.includes(key)?prev.filter(k=>k!==key):[...prev,key]);
           };
-
           const validateSelected = async () => {
-            for (const key of selectedForValidation) {
-              const [student, subjectId] = key.split('-');
-              await onValidateBelt(student, subjectId);
-            }
-            setSelectedForValidation([]);
+            for (const key of selectedForValidation) { const [s,sub]=key.split('-'); await onValidateBelt(s,sub); }
+            setSelected([]);
           };
 
           if (showBeltManager) {
-            const { student, subjectId } = showBeltManager;
-            const data = studentData[student][subjectId];
-            const subject = SUBJECTS.find(s => s.id === subjectId);
+            const {student,subjectId} = showBeltManager;
+            const d   = studentData[student][subjectId];
+            const sub = SUBJECTS.find(s=>s.id===subjectId);
+            const fails    = getFailedTestsForCurrentBelt(d);
+            const errRate  = getTrainingErrorRate(d.trainings);
+            const diffLevel= getDifficultyLevel(d);
             return (
               <div className="min-h-screen bg-gradient-purple p-4">
                 <div className="max-w-4xl">
                   <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold text-purple-900">Gérer les ceintures - {student}</h1>
-                    <Button onClick={() => setShowBeltManager(null)} variant="outline">Retour</Button>
+                    <h1 className="text-3xl font-bold text-purple-900">Gérer — {student}</h1>
+                    <Button onClick={()=>setShowBeltManager(null)} variant="outline">← Retour</Button>
                   </div>
-                  <Card className="mb-6" style={{borderTop: `4px solid ${subject.color}`}}>
+                  <Card className="mb-6" style={{borderTop:`4px solid ${sub.color}`}}>
                     <CardContent className="p-6">
-                      <h2 className="text-2xl font-bold mb-4" style={{color: subject.color}}>{subject.name}</h2>
-                      <p className="text-sm text-gray-600 mb-4">
-                        Ceinture actuelle : <strong>{BELTS[data.currentBelt].name}</strong>
-                      </p>
+                      <h2 className="text-2xl font-bold mb-1" style={{color:sub.color}}>{sub.name}</h2>
+                      <p className="text-sm text-gray-600 mb-4">Ceinture actuelle : <strong>{BELTS[d.currentBelt].name}</strong></p>
+                      {diffLevel && (
+                        <div className="mb-5 p-4 rounded-lg"
+                             style={{background:diffLevel==='danger'?'#fef2f2':'#fff7ed',
+                               border:`2px solid ${diffLevel==='danger'?'#fca5a5':'#fdba74'}`}}>
+                          <p className="font-bold mb-3" style={{color:diffLevel==='danger'?'#991b1b':'#92400e',fontSize:'1rem'}}>
+                            {diffLevel==='danger'?'🚨 Difficulté persistante — intervention recommandée':'⚠️ À surveiller'}
+                          </p>
+                          <div className="flex flex-wrap gap-3 mb-3">
+                            {fails>0&&(
+                              <div style={{background:'white',borderRadius:'0.5rem',padding:'0.5rem 0.875rem',
+                                border:`1px solid ${diffLevel==='danger'?'#fca5a5':'#fdba74'}`}}>
+                                <div className="text-2xl font-bold" style={{color:diffLevel==='danger'?'#dc2626':'#ea580c'}}>{fails}</div>
+                                <div className="text-xs text-gray-500">échec{fails>1?'s':''} au test</div>
+                                <div className="text-xs text-gray-400">ceinture {BELTS[d.currentBelt]?.name}</div>
+                              </div>
+                            )}
+                            {errRate!==null&&(
+                              <div style={{background:'white',borderRadius:'0.5rem',padding:'0.5rem 0.875rem',
+                                border:`1px solid ${errRate>=50?'#fca5a5':'#e5e7eb'}`}}>
+                                <div className="text-2xl font-bold" style={{color:errRate>=50?'#dc2626':'#6b7280'}}>{errRate}%</div>
+                                <div className="text-xs text-gray-500">erreurs entr.</div>
+                                <div className="text-xs text-gray-400">{d.trainings.length} séances</div>
+                              </div>
+                            )}
+                          </div>
+                          {d.failedTests?.length>0&&(
+                            <div className="mb-3">
+                              <p className="text-xs font-semibold mb-1" style={{color:'#6b7280'}}>Historique des échecs :</p>
+                              {d.failedTests.map((f,i) => (
+                                <p key={i} className="text-xs" style={{color:'#6b7280'}}>
+                                  • Ceinture {BELTS[f.beltIndex]?.name} — {new Date(f.date).toLocaleDateString('fr-FR')}
+                                </p>
+                              ))}
+                            </div>
+                          )}
+                          <Button size="sm" variant="outline"
+                                  style={{borderColor:'#6b7280',color:'#6b7280',fontSize:'0.75rem'}}
+                                  onClick={()=>{if(confirm(`Effacer les alertes pour ${student} en ${sub.name} ?`)){
+                                    onResetDifficulty(student,subjectId);setShowBeltManager(null);
+                                  }}}>
+                            ✓ Marquer comme traité
+                          </Button>
+                        </div>
+                      )}
                       <div className="mb-6">
                         <label className="block text-sm font-semibold mb-2">Changer la ceinture :</label>
-                        <select value={data.currentBelt}
-                                onChange={(e) => {
-                                  if (confirm(`Changer la ceinture de ${student} à ${BELTS[parseInt(e.target.value)].name} ?`)) {
-                                    onSetBeltLevel(student, subjectId, parseInt(e.target.value));
-                                    setShowBeltManager(null);
-                                  }
-                                }} className="w-full p-3 text-lg">
-                          {BELTS.map((belt, idx) => (
-                            <option key={belt.id} value={idx}>{belt.name} {belt.special || ''}</option>
-                          ))}
+                        <select value={d.currentBelt} className="w-full p-3 text-lg"
+                                onChange={e=>{if(confirm(`Changer à ${BELTS[parseInt(e.target.value)].name} ?`)){
+                                  onSetBeltLevel(student,subjectId,parseInt(e.target.value));setShowBeltManager(null);
+                                }}}>
+                          {BELTS.map((b,i)=><option key={b.id} value={i}>{b.name} {b.special||''}</option>)}
                         </select>
                       </div>
-                      {data.history && data.history.length > 0 && (
+                      {d.history?.length>0&&(
                         <div>
                           <h3 className="font-bold mb-2">Historique des validations :</h3>
-                          <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                            {data.history.slice(-5).reverse().map((h, i) => (
+                          <div style={{display:'flex',flexDirection:'column',gap:'0.5rem'}}>
+                            {d.history.slice(-5).reverse().map((h,i) => (
                               <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                                <span className="font-semibold">{h.beltName}</span>
+                                <span className="font-semibold">✅ {h.beltName}</span>
                                 <span className="text-xs text-gray-500">{new Date(h.date).toLocaleDateString('fr-FR')}</span>
                               </div>
                             ))}
@@ -1149,56 +1175,46 @@
             );
           }
 
-          if (showManagement) {
-            return (
-              <div className="min-h-screen bg-gradient-purple p-4">
-                <div className="max-w-4xl">
-                  <div className="flex items-center justify-between mb-8">
-                    <h1 className="text-3xl font-bold text-purple-900">Gérer les élèves</h1>
-                    <Button onClick={() => setShowManagement(false)} variant="outline">Retour</Button>
-                  </div>
-                  <Card className="mb-6">
-                    <CardContent className="p-6">
-                      <h2 className="text-xl font-bold mb-4">Ajouter un élève</h2>
-                      <div className="flex gap-3 items-end">
-                        <div className="flex-1">
-                          <label className="block text-sm font-semibold mb-2">Prénom</label>
-                          <input type="text" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Prénom" />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-semibold mb-2">Genre</label>
-                          <div className="flex gap-2">
-                            <Button variant={newGender === 'F' ? 'default' : 'outline'} onClick={() => setNewGender('F')} className="text-2xl px-4">👧</Button>
-                            <Button variant={newGender === 'M' ? 'default' : 'outline'} onClick={() => setNewGender('M')} className="text-2xl px-4">👦</Button>
-                          </div>
-                        </div>
-                        <Button onClick={() => { if(newName) { onAddStudent(newName, newGender); setNewName(''); } }}
-                                style={{backgroundColor: '#22c55e', color: 'white'}}>Ajouter</Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="p-6">
-                      <h2 className="text-xl font-bold mb-4">Liste ({students.length})</h2>
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                        {[...students].sort((a, b) => a.name.localeCompare(b.name)).map((s, idx) => (
-                          <Card key={idx} className="relative">
-                            <CardContent className="text-center p-4">
-                              <button onClick={() => confirm(`Supprimer ${s.name} ?`) && onRemoveStudent(s.name)}
-                                      className="absolute top-2 right-2 text-red-600 text-xl"
-                                      style={{background:'none',border:'none'}}>×</button>
-                              <div className="text-4xl mb-2">{s.gender === 'F' ? '👧' : '👦'}</div>
-                              <p className="font-semibold">{s.name}</p>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+          if (showManagement) return (
+            <div className="min-h-screen bg-gradient-purple p-4">
+              <div className="max-w-4xl">
+                <div className="flex items-center justify-between mb-8">
+                  <h1 className="text-3xl font-bold text-purple-900">Gérer les élèves</h1>
+                  <Button onClick={()=>setShowManagement(false)} variant="outline">Retour</Button>
                 </div>
+                <Card className="mb-6"><CardContent className="p-6">
+                  <h2 className="text-xl font-bold mb-4">Ajouter un élève</h2>
+                  <div className="flex gap-3 items-end">
+                    <div className="flex-1">
+                      <label className="block text-sm font-semibold mb-2">Prénom</label>
+                      <input type="text" value={newName} onChange={e=>setNewName(e.target.value)} placeholder="Prénom"/>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold mb-2">Genre</label>
+                      <div className="flex gap-2">
+                        <Button variant={newGender==='F'?'default':'outline'} onClick={()=>setNewGender('F')} className="text-2xl px-4">👧</Button>
+                        <Button variant={newGender==='M'?'default':'outline'} onClick={()=>setNewGender('M')} className="text-2xl px-4">👦</Button>
+                      </div>
+                    </div>
+                    <Button onClick={()=>{if(newName){onAddStudent(newName,newGender);setNewName('');}}} style={{backgroundColor:'#22c55e',color:'white'}}>Ajouter</Button>
+                  </div>
+                </CardContent></Card>
+                <Card><CardContent className="p-6">
+                  <h2 className="text-xl font-bold mb-4">Liste ({students.length})</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {[...students].sort((a,b)=>a.name.localeCompare(b.name)).map((s,i) => (
+                      <Card key={i} className="relative"><CardContent className="text-center p-4">
+                        <button onClick={()=>confirm(`Supprimer ${s.name} ?`)&&onRemoveStudent(s.name)}
+                                className="absolute top-2 right-2 text-red-600 text-xl" style={{background:'none',border:'none'}}>×</button>
+                        <div className="text-4xl mb-2">{s.gender==='F'?'👧':'👦'}</div>
+                        <p className="font-semibold">{s.name}</p>
+                      </CardContent></Card>
+                    ))}
+                  </div>
+                </CardContent></Card>
               </div>
-            );
-          }
+            </div>
+          );
 
           return (
             <div className="min-h-screen bg-gradient-purple p-4">
@@ -1206,139 +1222,173 @@
                 <div className="flex items-center justify-between mb-8">
                   <h1 className="text-3xl font-bold text-purple-900">Tableau de bord</h1>
                   <div className="flex gap-2">
-                    <Button onClick={onReload} variant="outline" style={{backgroundColor: '#3b82f6', color: 'white'}}>
-                      🔄 Actualiser
-                    </Button>
-                    <Button onClick={onOpenProgression} variant="outline" style={{borderColor: '#8b5cf6', color: '#8b5cf6'}}>
-                      📊 Progressions
-                    </Button>
-                    <Button onClick={() => setShowManagement(true)} variant="outline">👥 Élèves</Button>
+                    <Button onClick={onReload} variant="outline" style={{backgroundColor:'#3b82f6',color:'white'}}>🔄 Actualiser</Button>
+                    <Button onClick={onOpenProgression} variant="outline" style={{borderColor:'#8b5cf6',color:'#8b5cf6'}}>📊 Progressions</Button>
+                    <Button onClick={()=>setShowManagement(true)} variant="outline">👥 Élèves</Button>
                     <Button onClick={onBack} variant="outline">Déconnexion</Button>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <Button onClick={() => setSelectedSubject(null)} variant={!selectedSubject ? "default" : "outline"}>Toutes</Button>
-                  {SUBJECTS.map(s => (
-                    <Button key={s.id} onClick={() => setSelectedSubject(s.id)}
-                            variant={selectedSubject === s.id ? "default" : "outline"}
-                            style={selectedSubject === s.id ? {backgroundColor: s.color, color: 'white'} : {}}>
+                  <Button onClick={()=>setSelectedSubject(null)} variant={!selectedSubject?'default':'outline'}>Toutes</Button>
+                  {SUBJECTS.map(s=>(
+                    <Button key={s.id} onClick={()=>setSelectedSubject(s.id)}
+                            variant={selectedSubject===s.id?'default':'outline'}
+                            style={selectedSubject===s.id?{backgroundColor:s.color,color:'white'}:{}}>
                       {s.name}
                     </Button>
                   ))}
                 </div>
 
-                <Card className="mb-6 border-2" style={{borderColor: '#22c55e'}}>
+                <DifficultyPanel studentData={studentData} students={students}
+                  selectedSubject={selectedSubject}
+                  onManage={(student,subjectId)=>setShowBeltManager({student,subjectId})}/>
+
+                <Card className="mb-6 border-2" style={{borderColor:'#22c55e'}}>
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-2xl font-bold text-green-600">
-                        🎯 Prêts à tester ({ready.filter(s => !selectedSubject || s.subjectId === selectedSubject).length})
+                        🎯 Prêts à tester ({ready.filter(s=>!selectedSubject||s.subjectId===selectedSubject).length})
                       </h2>
-                      {selectedForValidation.length > 0 && (
+                      {selectedForValidation.length>0&&(
                         <div className="flex gap-2">
                           <span className="badge badge-success">{selectedForValidation.length} sélectionné(s)</span>
-                          <Button size="sm" style={{backgroundColor: '#22c55e', color: 'white'}} onClick={validateSelected}>
-                            ✓ Valider la sélection
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => setSelectedForValidation([])}>Annuler</Button>
+                          <Button size="sm" style={{backgroundColor:'#22c55e',color:'white'}} onClick={validateSelected}>✓ Valider</Button>
+                          <Button size="sm" variant="outline" onClick={()=>setSelected([])}>Annuler</Button>
                         </div>
                       )}
                     </div>
-                    {ready.filter(s => !selectedSubject || s.subjectId === selectedSubject).length === 0 ? (
-                      <p className="text-gray-500">Aucun</p>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {ready.filter(s => !selectedSubject || s.subjectId === selectedSubject).map((item, i) => {
-                          const key = `${item.student}-${item.subjectId}`;
-                          const isSelected = selectedForValidation.includes(key);
-                          return (
-                            <Card key={i} className="hover:shadow-lg"
-                                  style={{border: isSelected ? '2px solid #22c55e' : '1px solid #e5e7eb'}}>
-                              <CardContent className="p-4">
-                                <div className="flex items-start gap-2 mb-2">
-                                  <input type="checkbox" className="checkbox mt-1" checked={isSelected}
-                                         onChange={() => toggleSelection(item.student, item.subjectId)} />
-                                  <div className="flex-1">
-                                    <p className="font-bold text-lg">{item.student} ⭐</p>
-                                    <p className="text-sm" style={{color: item.subjectColor}}><strong>{item.subject}</strong></p>
-                                    <p className="text-sm text-gray-600">
-                                      Ceinture {item.belt} → <span className="text-green-600 font-semibold">{item.nextBelt}</span>
-                                    </p>
-                                    <p className="text-xs text-green-600">{item.trainingsCount} • {item.successRate}%</p>
+                    {ready.filter(s=>!selectedSubject||s.subjectId===selectedSubject).length===0
+                      ? <p className="text-gray-500">Aucun</p>
+                      : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {ready.filter(s=>!selectedSubject||s.subjectId===selectedSubject).map((item,i) => {
+                            const key=`${item.student}-${item.subjectId}`;
+                            const isSel = selectedForValidation.includes(key);
+                            const diffLevel = getDifficultyLevel(item.data);
+                            const fails    = getFailedTestsForCurrentBelt(item.data);
+                            const errRate  = getTrainingErrorRate(item.data.trainings);
+                            return (
+                              <Card key={i} className="hover:shadow-lg" style={{border:isSel?'2px solid #22c55e':'1px solid #e5e7eb'}}>
+                                <CardContent className="p-4">
+                                  <div className="flex items-start gap-2 mb-2">
+                                    <input type="checkbox" className="checkbox mt-1" checked={isSel} onChange={()=>toggleSel(item.student,item.subjectId)}/>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                                        <p className="font-bold text-lg">{item.student} ⭐</p>
+                                        {diffLevel==='danger'&&<span className="difficulty-flag flag-red">🚨 {fails} échecs</span>}
+                                        {diffLevel==='warning'&&fails>0&&<span className="difficulty-flag flag-orange">⚠️ {fails} échec</span>}
+                                      </div>
+                                      <p className="text-sm" style={{color:item.subjectColor}}><strong>{item.subject}</strong></p>
+                                      <p className="text-sm text-gray-600">{item.belt} → <span className="text-green-600 font-semibold">{item.nextBelt}</span></p>
+                                      <div className="flex gap-1 flex-wrap mt-1">
+                                        <span className="stat-pill stat-pill-gray">{item.trainingsCount} entr.</span>
+                                        <span className="stat-pill stat-pill-gray">{item.successRate}% succès</span>
+                                        {errRate!==null&&errRate>=40&&(
+                                          <span className={`stat-pill ${errRate>=50?'stat-pill-red':'stat-pill-orange'}`}>📉 {errRate}%</span>
+                                        )}
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 mt-3">
-                                  <Button size="sm" style={{backgroundColor: '#22c55e', color: 'white'}}
-                                          onClick={() => onValidateBelt(item.student, item.subjectId)}>✓</Button>
-                                  <Button size="sm" variant="outline" style={{borderColor: '#ef4444', color: '#ef4444'}}
-                                          onClick={() => onRejectTest(item.student, item.subjectId)}>✗</Button>
-                                  <Button size="sm" variant="outline"
-                                          onClick={() => setShowBeltManager({student: item.student, subjectId: item.subjectId})}>⚙️</Button>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          );
-                        })}
-                      </div>
-                    )}
+                                  <div className="grid grid-cols-3 gap-2 mt-3">
+                                    <Button size="sm" style={{backgroundColor:'#22c55e',color:'white'}} onClick={()=>onValidateBelt(item.student,item.subjectId)}>✓</Button>
+                                    <Button size="sm" variant="outline" style={{borderColor:'#ef4444',color:'#ef4444'}} onClick={()=>onRejectTest(item.student,item.subjectId)}>✗</Button>
+                                    <Button size="sm" variant="outline" onClick={()=>setShowBeltManager({student:item.student,subjectId:item.subjectId})}>⚙️</Button>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            );
+                          })}
+                        </div>
+                      )}
                   </CardContent>
                 </Card>
 
-                <Card>
-                  <CardContent className="p-6">
-                    <h2 className="text-2xl font-bold mb-4">Vue classe</h2>
-                    <div style={{maxHeight: '600px', overflow: 'auto', position: 'relative'}}>
-                      <table style={{width: '100%', borderCollapse: 'collapse'}}>
-                        <thead style={{position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 10, boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                          <tr>
-                            <th className="text-left" style={{padding: '0.75rem', backgroundColor: 'white'}}>Élève</th>
-                            {SUBJECTS.filter(s => !selectedSubject || s.id === selectedSubject).map(s => (
-                              <th key={s.id} className="text-center" style={{padding: '0.75rem', backgroundColor: 'white'}}>
-                                <div style={{color: s.color}} className="font-bold">{s.name}</div>
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {[...students].sort((a, b) => a.name.localeCompare(b.name)).map((stu, idx) => (
-                            <tr key={idx} className="hover:bg-gray-50">
-                              <td className="font-semibold">
-                                <span className="text-xl">{stu.gender === 'F' ? '👧' : '👦'}</span> {stu.name}
-                              </td>
-                              {SUBJECTS.filter(s => !selectedSubject || s.id === selectedSubject).map(sub => {
-                                const d = studentData[stu.name]?.[sub.id];
-                                if (!d) return <td key={sub.id}></td>;
-                                const rdy = isStudentReady(d.trainings);
-                                const rate = getSuccessRate(d.trainings);
-                                const belt = BELTS[d.currentBelt];
-                                return (
-                                  <td key={sub.id} className="text-center cursor-pointer"
-                                      onClick={() => setShowBeltManager({student: stu.name, subjectId: sub.id})}>
-                                    <div className="flex flex-col items-center">
-                                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                                           style={{ backgroundColor: belt.color,
-                                             border: belt.border ? `2px solid ${belt.border}` : 'none',
-                                             color: belt.id === 'noire' ? 'white' : 'black' }}>
-                                        {belt.special || belt.name.charAt(0).toUpperCase()}
-                                      </div>
-                                      {d.trainings.length > 0 && (
-                                        <div className="text-xs">
-                                          <span style={{color: rdy ? '#22c55e' : '#6b7280'}}>
-                                            {d.trainings.length} • {Math.round(rate * 100)}%
-                                          </span>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </td>
-                                );
-                              })}
+                <div className="view-toggle">
+                  <button className={dashboardView==='classe'?'active':''} onClick={()=>setDashboardView('classe')}>
+                    📊 Vue classe (tableau)
+                  </button>
+                  <button className={dashboardView==='eleves'?'active':''} onClick={()=>setDashboardView('eleves')}>
+                    👤 Vue par élève (ceintures à passer)
+                  </button>
+                </div>
+
+                {dashboardView==='classe' && (
+                  <Card>
+                    <CardContent className="p-6">
+                      <h2 className="text-2xl font-bold mb-4">Vue classe</h2>
+                      <div style={{maxHeight:'600px',overflow:'auto',position:'relative'}}>
+                        <table style={{width:'100%',borderCollapse:'collapse'}}>
+                          <thead style={{position:'sticky',top:0,backgroundColor:'white',zIndex:10,boxShadow:'0 2px 4px rgba(0,0,0,0.1)'}}>
+                            <tr>
+                              <th className="text-left" style={{padding:'0.75rem',backgroundColor:'white'}}>Élève</th>
+                              {SUBJECTS.filter(s=>!selectedSubject||s.id===selectedSubject).map(s=>(
+                                <th key={s.id} className="text-center" style={{padding:'0.75rem',backgroundColor:'white'}}>
+                                  <div style={{color:s.color}} className="font-bold">{s.name}</div>
+                                </th>
+                              ))}
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
+                          </thead>
+                          <tbody>
+                            {[...students].sort((a,b)=>a.name.localeCompare(b.name)).map((stu,idx) => (
+                              <tr key={idx} className="hover:bg-gray-50">
+                                <td className="font-semibold"><span className="text-xl">{stu.gender==='F'?'👧':'👦'}</span> {stu.name}</td>
+                                {SUBJECTS.filter(s=>!selectedSubject||s.id===selectedSubject).map(sub=>{
+                                  const d = studentData[stu.name]?.[sub.id];
+                                  if (!d) return <td key={sub.id}></td>;
+                                  const rdy       = isStudentReady(d.trainings);
+                                  const rate      = getSuccessRate(d.trainings);
+                                  const belt      = BELTS[d.currentBelt];
+                                  const diffLevel = getDifficultyLevel(d);
+                                  const fails     = getFailedTestsForCurrentBelt(d);
+                                  return (
+                                    <td key={sub.id} className="text-center cursor-pointer"
+                                        onClick={()=>setShowBeltManager({student:stu.name,subjectId:sub.id})}>
+                                      <div className="flex flex-col items-center gap-1">
+                                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                                             style={{backgroundColor:belt.color,border:belt.border?`2px solid ${belt.border}`:'none',color:belt.id==='noire'?'white':'black'}}>
+                                          {belt.special||belt.name.charAt(0).toUpperCase()}
+                                        </div>
+                                        {d.trainings.length>0&&(
+                                          <div className="text-xs"><span style={{color:rdy?'#22c55e':'#6b7280'}}>{d.trainings.length}·{Math.round(rate*100)}%</span></div>
+                                        )}
+                                        {diffLevel==='danger'&&(
+                                          <span style={{fontSize:'0.6rem',background:'#fee2e2',color:'#991b1b',padding:'0.1rem 0.25rem',borderRadius:'0.2rem',fontWeight:700}}>🚨×{fails}</span>
+                                        )}
+                                        {diffLevel==='warning'&&(
+                                          <span style={{fontSize:'0.65rem',background:'#fff7ed',color:'#92400e',padding:'0.1rem 0.25rem',borderRadius:'0.2rem',fontWeight:700}}>⚠️</span>
+                                        )}
+                                      </div>
+                                    </td>
+                                  );
+                                })}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {dashboardView==='eleves' && (
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <h2 className="text-2xl font-bold">Vue par élève</h2>
+                          <p className="text-sm text-gray-500 mt-1">Prochaine ceinture à passer par matière · Cliquer sur une ligne pour gérer</p>
+                        </div>
+                      </div>
+                      <StudentNextBeltsView
+                        students={students} studentData={studentData}
+                        selectedSubject={selectedSubject} isStudentReady={isStudentReady}
+                        getSuccessRate={getSuccessRate}
+                        onManage={(student,subjectId)=>setShowBeltManager({student,subjectId})}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </div>
           );
